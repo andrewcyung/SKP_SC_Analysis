@@ -1,0 +1,26 @@
+src_IDmode = 'name';
+rootpath = 'F:\SKP-SC analysis\';
+dest_subpath = '03-Segmentation\02_Histology\02_Set 2 - MBP_Axons_10x\02-Whole section\';
+src_rootpath = 'L:\data ex vivo\original data\Icord data skp sc\MBP_Axons_10x - SET 2\ANALYSIS';
+
+
+load([rootpath 'SKP-IDtag'])
+
+    
+for j=1:14
+    dest_id = IDtag{j}.id;
+
+    if strcmp(src_IDmode,'name')
+        src_id = IDtag{j}.Nameid;
+    elseif strcmp(src_IDmode,'ABC')
+        src_id = IDtag{j}.ADCid;
+    elseif strcmp(src_IDmode,'number')
+        src_id = IDtag{j}.id;
+    end
+    
+    dest_path = [rootpath dest_id '\' dest_subpath]
+    src_path = [src_rootpath  src_id '\' '*.ov*']
+
+    [success, message, messageid] = copyfile(src_path,dest_path);
+    disp(message);
+end

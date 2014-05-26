@@ -1,0 +1,20 @@
+function results = SKP_generate_histo_ROI_stats(im_path,ROI_path,segmap_path)
+
+im = imread(im_path);
+imsize = size(im);
+if length(imsize) > 2
+    disp('generate_ROI_stats: input image has more than one channel');
+    results = '';
+    return;
+end
+
+ROI = imread(ROI_path);
+segmap = imread(segmap_path);
+
+results.n_ROI_points = length(ROI(ROI));
+results.data = im(ROI&segmap);
+results.n_seg_points = length(results.data);
+results.avg = mean(results.data);
+results.stdev = std(double(results.data));
+results.median = median(results.data);
+

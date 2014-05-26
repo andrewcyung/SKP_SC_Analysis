@@ -1,0 +1,498 @@
+classdef SkpCollatedDataset < CollatedDataset
+    properties
+        animal_id;
+        slice_id;
+    end
+    methods
+        % SkpCollatedDataset class constructor (inherited from CollatedDataset
+        function obj = SkpCollatedDataset(animal_id,slice_id)
+            % provide values for superclass constructor (CollatedDataset)
+            if nargin == 0
+                args{1} = 'undefined'; % uid
+            else
+                args{1} = [animal_id '_' slice_id];
+            end
+            % call superclass constructor before accessing object
+            obj = obj@CollatedDataset(args{:});
+            % initialize subclass properties
+            obj.animal_id = animal_id;
+            obj.slice_id = slice_id;
+            
+            % all SkpCollatedDataset objects have a common set of contents
+            % specific to the SKP-SC spinal cord injury project
+            obj = obj.initDataset();
+        end
+        
+        % initialize SkpCollatedDataset object with standard skeleton
+        function obj = initDataset(obj)
+            % Each DataScheme has the ParxDatasets listed in parx_names.
+            % The hierarchy of objects runs as follows:
+            %   I. DataScheme
+            %      II. ParxDataset
+            %      II. Segmentation
+            %          III. SegZone
+            %
+            % Specifically:
+            %
+            % DataSchemes               Segmentation        SegZone
+            % ===========               ============        =======
+            % MRIPixelGrid              Sectors             Ventral
+            %                                               Lateral
+            %                                               Dorsal
+            % Squares_63x               IntactvsDamaged     Intact
+            %                                               Damaged
+            % ECVentralIntactvsDamaged  IntactvsDamaged     Intact
+            %                                               Damaged
+            
+            parx_names = {'GFAP_AvgOD','GFAP_AvgODThresh','GFAP_AreaFraction', ...
+                'P0_AvgOD','P0_AvgODThresh','P0_AreaFraction', ...
+                'GFPSet1_AvgOD','GFPSet1_AvgODThresh','GFPSet1_AreaFraction', ...
+                'MBP_AvgOD','MBP_AvgODThresh','MBP_AreaFraction', ...
+                'Axon_AvgOD','Axon_AvgODThresh','Axon_AreaFraction', ...
+                'GFPSet2_AvgOD','GFPSet2_AvgODThresh','GFPSet2_AreaFraction', ...
+                'EC_AvgOD','EC_AvgODThresh','EC_AreaFraction', ...
+                'FA','ADC','Dlong','Dtrans','TrW', ...
+                'CPMG_echo10','CPMG_So','CPMG_flipangle','MWF','CPMG_SNR','CPMG_misfit'};
+            n_parx = numel(parx_names);
+            
+            % MRIPixelGrid DataScheme
+            obj.updateDataScheme('MRIPixelGrid');
+            obj.data_schemes.('MRIPixelGrid').updateSeg('Sectors');
+            obj.data_schemes.('MRIPixelGrid').segs.('Sectors').updateSegZones('Ventral');
+            obj.data_schemes.('MRIPixelGrid').segs.('Sectors').updateSegZones('Dorsal');
+            obj.data_schemes.('MRIPixelGrid').segs.('Sectors').updateSegZones('Lateral');
+            for i=1:n_parx
+                obj.data_schemes.('MRIPixelGrid').updateParxDataset(parx_names{i});
+            end
+            
+            % Squares_63x DataScheme
+            obj.updateDataScheme('Squares_63x');
+            obj.data_schemes.('Squares_63x').updateSeg('DamagedvsIntact');
+            obj.data_schemes.('Squares_63x').segs.('DamagedvsIntact').updateSegZones('Damaged');
+            obj.data_schemes.('Squares_63x').segs.('DamagedvsIntact').updateSegZones('Intact');
+            for i=1:n_parx
+                obj.data_schemes.('Squares_63x').updateParxDataset(parx_names{i});
+            end
+            
+            % ECVentralDamagedvsIntact DataScheme
+            obj.updateDataScheme('ECVentralDamagedvsIntact');
+            obj.data_schemes.('ECVentralDamagedvsIntact').updateSeg('DamagedvsIntact');
+            obj.data_schemes.('ECVentralDamagedvsIntact').segs.('DamagedvsIntact').updateSegZones('Damaged');
+            obj.data_schemes.('ECVentralDamagedvsIntact').segs.('DamagedvsIntact').updateSegZones('Intact');
+            for i=1:n_parx
+                obj.data_schemes.('ECVentralDamagedvsIntact').updateParxDataset(parx_names{i});
+            end
+        end
+    end
+end
+
+classdef CollatedDataset
+    properties
+        uid = 'undefined';
+        data_schemes = struct([]); % a struct/dict of DataScheme objects
+        included = 0;
+        timestamp = 0;
+    end
+    methods
+        % CollatedDataset class constructor
+        function obj = CollatedDataset(uid)
+            if nargin == 1
+                obj.uid = uid;
+            end
+        end
+        
+        % set value for included flag
+        function obj = setInclude(obj,flag)
+            obj.included = flag;
+        end
+        
+        % add or update existing entry in data_schemes (DataSchemes struct array)
+        function obj = updateDataScheme(obj,scheme_name,data_scheme)
+            if isa(data_scheme,'DataScheme')
+                if ~isfield(obj.data_schemes,scheme_name)
+                    disp(['DataScheme ' scheme_name ' in ' obj.uid ' is new']);
+                end
+                %add/update seg_zones
+                obj.data_schemes.(scheme_name) = data_scheme;
+                obj.timestamp = now();
+            else
+                disp(['data_schemes update of ' obj.id ' failed: ' scheme_name ' is not a DataScheme object.']);
+            end
+        end
+        
+        % remove existing entry in parx_datasets (ParxDataset struct array)
+        function obj = cutDataScheme(obj,scheme_name)
+            if isfield(obj.data_schemes,scheme_name)
+                obj.data_schemes = rmfield(obj.data_schemes,scheme_name);
+                msg = ['DataScheme ' scheme_name ' removed from ' obj.id];
+                obj.timestamp = now();
+            else
+                msg = ['DataScheme ' parx_name ' is not a member of ' obj.id];
+            end
+            disp(msg);
+        end
+        
+        % print info about this CollatedDataset object and its contents
+        function print(obj)
+            disp(['CollatedDataset ' obj.uid ': ' ...
+                '.included = ' num2str(obj.included) ' ' ...
+                '.timestamp = ' datestr(obj.timestamp)]);
+            scheme_names = fieldnames(obj.data_schemes);
+            for i=1:length(scheme_names)
+                obj.data_schemes.(scheme_names{i}).print();
+            end
+        end
+        
+    end
+end
+
+classdef DataScheme
+   properties
+      id = '';
+      parx_datasets = struct([]); % a struct/dict of ParxData objects
+      segs = struct([]); % a struct/dict of Segmentation objects
+      included = 0;
+      timestamp = 0;
+   end
+    methods
+        % DataScheme class constructor
+        function obj = DataScheme(id)
+            if nargin == 1
+                obj.id = id;
+            end
+        end
+        
+        % set value for included flag
+        function obj = setInclude(obj,flag)
+            obj.included = flag;
+        end
+        
+        % add or update existing entry in parx_datasets (ParxDataset struct array)
+        function obj = updateParxDataset(obj,parx_name,parx_dataset)
+            if nargin == 2 %if no ParxDataset object given, initialize to empty object
+                % do it only if there is already a ParxDataset with the same name
+                if ~isfield(obj.parx_datasets,parx_name)
+                    obj.parx_datasets.(parx_name) = ParxDataset(parx_name);
+                end
+            elseif nargin == 3
+                if isa(parx_dataset,'ParxDataset')
+                    if ~isfield(obj.parx_datasets,parx_name)
+                        disp(['ParxDataset ' parx_name ' in ' obj.id ' is new']);
+                    end
+                    %add/update seg_zones
+                    obj.parx_datasets.(parx_name) = parx_dataset;
+                    obj.timestamp = now();
+                else
+                    disp(['parx_datasets update of ' obj.id ' failed: ' parx_name ' is not a ParxDataset object.']);
+                end
+            end
+        end
+        
+        % remove existing entry in parx_datasets (ParxDataset struct array)
+        function obj = cutParxDataset(obj,parx_name)
+           if isfield(obj.parx_datasets,parx_name)
+               obj.parx_datasets = rmfield(obj.parx_datasets,parx_name);
+               msg = ['ParxDataset ' parx_name ' removed from ' obj.id];
+               obj.timestamp = now();
+           else
+               msg = ['ParxDataset ' parx_name ' is not a member of ' obj.id];
+           end
+           disp(msg);
+        end
+        
+        % add or update existing entry in segs (Segmentation struct array)
+        function obj = updateSeg(obj,seg_name,seg)
+            if nargin == 2 %if no Segmentation object given, initialize to empty object
+                % do it only if there is already a Segmentation with the same name
+                if ~isfield(obj.segs,seg_name)
+                    obj.segs.(seg_name) = Segmentation(seg_name);
+                end
+            elseif nargin == 3
+                if isa(seg,'Segmentation')
+                    if ~isfield(obj.segs,seg_name)
+                        disp(['Segmentation ' seg_name ' in ' obj.id ' is new']);
+                    end
+                    %add/update seg_zones
+                    obj.segs.(seg_name) = seg;
+                    obj.timestamp = now();
+                else
+                    disp(['segs update of ' obj.id ' failed: ' seg_name ' is not a Segmentation object.']);
+                end
+            end
+        end
+        
+        % remove existing entry in parx_datasets (ParxDataset struct array)
+        function obj = cutSeg(obj,seg_name)
+           if isfield(obj.segs,seg_name)
+               obj.segs = rmfield(obj.segs,seg_name);
+               msg = ['Segmentation ' seg_name ' removed from ' obj.id];
+               obj.timestamp = now();
+           else
+               msg = ['Segmentation ' seg_name ' is not a member of ' obj.id];
+           end
+           disp(msg);
+        end
+        
+        % print info about this DataScheme object and its contents
+        function print(obj)
+            disp(['DataScheme ' obj.id ': ' ...
+                '.included = ' num2str(obj.included) ' ' ...
+                '.timestamp = ' datestr(obj.timestamp)]);
+            parx_names = fieldnames(obj.parx_datasets);
+            seg_names = fieldnames(obj.segs);
+            for i=1:length(parx_names)
+                obj.parx_datasets.(parx_names{i}).print();
+            end
+            for i=1:length(seg_names)
+                obj.segs.(seg_names{i}).print();
+            end
+        end
+        
+    end
+end
+
+classdef ParxDataset
+    properties
+        id = '';
+        data; % int/float vector/matrix
+        included = 0;
+        timestamp = 0;
+    end
+    methods
+        % ParxDataset class constructor
+        function obj = ParxDataset(id,data)
+            if nargin == 1
+                obj.id = id;
+                obj.data = [];
+            elseif nargin == 2
+                obj.id = id;
+                obj.data = data;
+                obj.timestamp = now();
+            end
+        end
+        
+        % set value for included flag
+        function obj = setInclude(obj,flag)
+            obj.included = flag;
+        end
+
+        % update data array
+        function obj = updateData(obj,data)
+           obj.data = data;
+           obj.timestamp = now();
+        end
+        
+        % print info on current ParxDataset object
+        function obj = print(obj)
+            disp(['ParxDataset ' obj.id ':  ' ...
+                'n_data = ' num2str(numel(obj.data)) ' '...
+                '.included = ' num2str(obj.included) ' '...
+                '.timestamp = ' datestr(obj.timestamp)]);
+        end
+
+    end
+end
+
+classdef Segmentation
+    properties
+        id = '';
+        seg_zones = struct([]); % a struct/dict of SegZone objects
+        included = 0;
+        timestamp = 0;
+    end
+    methods
+        % Segmentation class constructor
+        function obj = Segmentation(id,seg_zone_names)
+            if nargin == 2
+                obj.id = id;
+                n_seg_zone = numel(seg_zone_names);
+                for i=1:n_seg_zone
+                    obj.seg_zones.(seg_zone_names{i}) = SegZone;
+                end
+                obj.timestamp = now();
+            else
+                disp('wrong number of constructor arguments; properties set to default vals');
+            end
+        end
+        
+        % set value for included flag
+        function obj = setInclude(obj,flag)
+            obj.included = flag;
+        end
+        
+        % add or update existing entry in seg_zones (SegZone struct array)
+        function obj = updateSegZones(obj,zone_name,seg_zone)
+            if nargin == 2 %if no SegZones object given, initialize to empty object
+                % do it only if there is already a SegZone with the same name
+                if ~isfield(obj.seg_zones,zone_name)
+                    obj.seg_zones.(zone_name) = SegZone(zone_name);
+                end
+            elseif nargin == 3
+                if isa(seg_zone,'SegZone')
+                    if ~isfield(obj.seg_zones,zone_name)
+                        disp(['SegZone ' zone_name ' in ' obj.id ' is new']);
+                    end
+                    %add/update seg_zones
+                    obj.seg_zones.(zone_name) = seg_zone;
+                    obj.timestamp = now();
+                else
+                    msg = ['seg_zones update of ' obj.id ' failed: ' zone_name ' is not a SegZone object.'];
+                    disp(msg);
+                end
+            end
+        end
+        
+        % remove existing entry in seg_zones (struct array of SegZone)
+        function obj = cutSegZones(obj,zone_name)
+           if isfield(obj.seg_zones,zone_name)
+               obj.seg_zones = rmfield(obj.seg_zones,zone_name);
+               msg = ['SegZone ' zone_name ' removed from ' obj.id];
+               obj.timestamp = now();
+           else
+               msg = ['SegZone ' zone_name ' is not a member of ' obj.id];
+           end
+           disp(msg);
+        end
+        
+        % retrieve mask array.  If the zone name is set to 'all' then the
+        % union of all seg_zones masks is returned
+        function mask = getSegMask(obj,zone_name)
+            if isfield(obj.seg_zones,zone_name)
+                mask = obj.seg_zones.(zone_name).mask;
+            elseif strcmp(zone_name,'all')
+                zone_names = fieldnames(obj.seg_zones);
+                mask = obj.seg_zones.(zone_names{1}).mask;
+                if numel(zone_names) > 1
+                    for i=2:numel(zone_names)
+                        mask = mask | obj.seg_zones.(zone_names{i}).mask;
+                    end
+                end
+            else
+                disp(['requested mask with name ' zone_name ' not found.']);
+                return;
+            end
+                
+        end
+        
+        % print info about this Segmentation object and its contents
+        function print(obj)
+           disp(['Segmentation ' obj.id ': ' ...
+                 '.included = ' num2str(obj.included) ' ' ... 
+                 '.timestamp = ' datestr(obj.timestamp)]);
+           zone_names = fieldnames(obj.seg_zones);
+           n_seg_zone = numel(obj.seg_zones);
+           for i=1:n_seg_zone
+                obj.seg_zones.(zone_names{i}).print();
+           end
+        end
+    end
+end
+
+classdef SegZone
+   properties
+      id = ''
+      mask; % logical vector/matrix
+      included = 0;
+      timestamp = 0;
+   end
+    methods
+        % SegZone class constructor
+        function obj = SegZone(obj,id,mask)
+            if nargin
+            obj.id = id;
+            obj.mask = mask;
+        end
+        
+        % set value for included flag
+        function obj = setInclude(obj,flag)
+            obj.included = flag;
+        end
+
+        
+        % update mask array
+        function obj = updateMask(obj,mask)
+           obj.mask = mask;
+           obj.timestamp = now();
+        end
+        
+        % print info on current SegZone object
+        function obj = print(obj)
+           disp(['SegZone ' obj.id ':  ' ...
+                 'n_mask = ' num2str(numel(obj.mask)) ' '...
+                 '.included = ' num2str(obj.included) ' '...
+                 '.timestamp = ' datestr(obj.timestamp)]);
+        end
+    end
+end
+
+
+
+% animal_id = {'11' '16' '18' '20' '36' '39' '41' '51' '54' '55' '56' '58' '61' '62'};
+% expt_group = {'8wpi','27wpi_media','27wpi_SKP'};
+% MRI_slice = {'1EdgeCaudal','2MidCaudal','3Epicentre','4MidCranial','5EdgeCranial'};
+% parameter_names = {'GFAP_AvgOD','GFAP_AvgODThresh','GFAP_AreaFraction', ...
+%           'P0_AvgOD','P0_AvgODThresh','P0_AreaFraction', ...
+%           'GFPSet1_AvgOD','GFPSet1_AvgODThresh','GFPSet1_AreaFraction', ...
+%           'MBP_AvgOD','MBP_AvgODThresh','MBP_AreaFraction', ...
+%           'Axon_AvgOD','Axon_AvgODThresh','Axon_AreaFraction', ...
+%           'GFPSet2_AvgOD','GFPSet2_AvgODThresh','GFPSet2_AreaFraction', ...
+%           'EC_AvgOD','EC_AvgODThresh','EC_AreaFraction', ...
+%           'FA','ADC','Dlong','Dtrans','TrW', ...
+%           'CPMG_echo10','CPMG_So','CPMG_flipangle','MWF','CPMG_SNR','CPMG_misfit'};
+% 
+% SegScheme_names = {'MRIPixelGrid','LeoSquares','VentralDamagedvsIntact'};
+% n_SegSchemes = length(SegScheme_names);
+% 
+% seg_zone_names('LeoSquares') = {'Intact','Damaged'};
+% seg_zone_names('VentralDamagedvsIntact') = {'Intact','Damaged'};
+% seg_zone_names('Sectors') = {'Ventral','Dorsal','Lateral'};
+% 
+% empty_corr_datablock = struct('SegSchemes',struct([]),includeFlag,0);
+% for i=1:n_SegSchemes
+%     empty_corr_datablock.(SegScheme_names{i}) = struct('SegZone',struct([]),includeFlag,0);
+%     n_segzone = length(seg_zone_names.('SegScheme_names{i}'));
+%     for j=1:n_segzones
+% 
+% 
+% 
+% 
+% classdef ParameterDataset
+%     properties
+%         datapoints = {};
+%         n_points = 0;
+%         average = 0;
+%         std_dev = 0;
+%         quartile = [0 0 0];
+%         includeFlag = 0;
+%     end
+% end
+% 
+% 
+% classdef SegZone
+%     properties
+%         parameters = struct([]);
+%         datapoint_index = {};
+%     end
+% end
+% 
+% function sz = SegZone(parameter_names,datapoint_label)
+%     if nargin > 0
+%         n_parameters = length(parameter_names);
+%         for i=1:n_parameters
+%            sz.parameter_list(parameter_names{i}) = ParameterDataset;
+%            sz.datapoint_index = '';
+%         end
+%     end
+% end
+% 
+% classdef SegScheme
+%     properties
+%         segzones = struct([]);
+%     end
+% end
+% 
+% n_segschemes = length(SegScheme_names);
+% for i=1:n_segschemes
+%     
+% end
+% 

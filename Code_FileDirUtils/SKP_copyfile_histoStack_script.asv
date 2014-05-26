@@ -1,0 +1,41 @@
+section_path{1} = '01-edge_caudal\';
+section_path{2} = '02-mid_caudal\';
+section_path{3} = '03-epicentre\';
+section_path{4} = '04-mid_cranial\';
+section_path{5} = '05-edge_cranial\';
+
+rootpath = 'F:\SKP-SC analysis\';
+
+
+load([rootpath 'SKP_matchkey_ay_original'])
+
+for j=1:14
+
+    id = matchkey{j}.id
+    src_basepath = [rootpath id '\' '05-Registration\04-Axon_BtwnSection_Rigid\01-Source data\'];
+      
+    dest_basepath = [rootpath id '\' '05-Registration\04-Axon_BtwnSection_Rigid\02-Results\'];
+    
+    for i=1:5
+        dest_path = [dest_basepath section_path{i}];
+        startindex = matchkey{j}.histoextent(i,1);
+        endindex = matchkey{j}.histoextent(i,2);
+        n_histo = endindex-startindex+1;
+
+        for q=1:n_histo
+            filename = [num2str(startindex-1+q) '.jpg'];
+            filelist = rdir([src_histo_path filename]);
+            if length(filelist)==1
+                histo_im{q} = imread([src_histo_path filename],'jpg');
+            else
+                histo_im{q} = dummyim;
+            end
+        end
+        
+    end
+
+
+    
+end
+
+

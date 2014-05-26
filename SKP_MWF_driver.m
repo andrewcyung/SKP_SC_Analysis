@@ -1,0 +1,101 @@
+src_basepath = 'E:\mriuser\nmr\';
+dest_basepath = 'F:\SKP-SC analysis\';
+dest_basepath2 = '01-Original Images\01-MRI\';
+
+% id='11';
+% exp_cran2caud =[11 9 7 8 10];
+% studypath = 'PK048wk11.551';
+
+
+% id='16';
+% exp_cran2caud = [10 8 7 9 11];
+% studypath = 'PK048wk16.511';
+ 
+% id='18';
+% exp_cran2caud = [13 11 10 12 14];
+% studypath = 'PK048wk18.531';
+
+% id='20';
+% exp_cran2caud = [12 10 9 15 16];
+% studypath = 'PK048wk20.521';
+
+% id='36';
+% exp_cran2caud = [11 9 8 10 12];
+% studypath = 'PK04_36.3K1';
+% 
+% id='39';
+% exp_cran2caud = [19 17 15 16 18];
+% studypath = 'PK04_39.3F1';
+
+id='41';
+exp_cran2caud = [18 10 8 17 19];
+studypath = 'PK04_41.3F1';
+
+% id='51';
+% exp_cran2caud = [14 12 11 13 15];
+% studypath = 'PK04_51.3K1';
+% 
+% id='54';
+% exp_cran2caud = [11 9 8 10 12];
+% studypath = 'PK04_54.3G1';
+
+% id='55';
+% exp_cran2caud = [22 20 19 21 23];
+% studypath = 'PK04_55.3G1';
+
+% id='56';
+% exp_cran2caud = [11 9 8 10 12];
+% studypath = 'PK04_56.3H1';
+% 
+% id='58';
+% exp_cran2caud = [12 10 8 9 11];
+% studypath = 'PK04_58.3G1';
+
+% id='61';
+% exp_cran2caud = [11 9 8 10 11];
+% studypath = 'PK04_61.3H1';
+
+% id='62';
+% exp_cran2caud = [12 10 8 11 13];
+% studypath = 'PK04_62.3H1';
+% 
+dest{1} = [dest_basepath id '\' dest_basepath2 '05-edge_cranial\'];
+dest{2} = [dest_basepath id '\' dest_basepath2 '04-mid_cranial\'];
+dest{3} = [dest_basepath id '\' dest_basepath2 '03-epicentre\'];
+dest{4} = [dest_basepath id '\' dest_basepath2 '02-mid_caudal\'];
+dest{5} = [dest_basepath id '\' dest_basepath2 '01-edge_caudal\'];
+
+ROIpath = [dest_basepath id '\' dest_basepath2];
+load([ROIpath 'MWFgen_ROI_' id],'ROI');
+
+TE=6.738/1000;
+isCVNNLS = 1; fixed_misfit = 0;
+isSEcorr = 0;
+integlim = [7.5 22 200];
+
+for i_slice=1:5
+    srcpath = [src_basepath studypath '\' num2str(exp_cran2caud(i_slice))];
+    CPMGset = get2dseq(srcpath,1);
+    [reconData,okornot] = OpenCorrect(CPMGset.data); uiwait;
+    echo_images{i_slice} = reconData;
+end
+
+for i_slice=1:5
+     MWFset{i_slice} = MWF_cmd(echo_images{i_slice}, ROI{i_slice}, isCVNNLS, isSEcorr, TE, integlim, fixed_misfit);
+
+    imMWF = squeeze(MWFset{i_slice}.MWFmap); save([dest{i_slice} 'CPMG_MWF'], 'imMWF');
+    imAlpha = squeeze(MWFset{i_slice}.alphamap); save([dest{i_slice} 'CPMG_flipangle'], 'imAlpha');
+    imDn = squeeze(MWFset{i_slice}.dnmap); save([dest{i_slice} 'CPMG_dn'], 'imDn');
+    imGmT2 = squeeze(MWFset{i_slice}.gmT2map); save([dest{i_slice} 'CPMG_gmT2'], 'imGmT2');
+    imSNR = squeeze(MWFset{i_slice}.SNRmap); save([dest{i_slice} 'CPMG_SNR'], 'imSNR');
+    imMisfit = squeeze(MWFset{i_slice}.misfitmap); save([dest{i_slice} 'CPMG_misfit'], 'imMisfit');
+    imT2dist = squeeze(MWFset{i_slice}.T2distmap); save([dest{i_slice} 'CPMG_T2dist'], 'imT2dist');
+    
+    h1 = figure(1); axis image; imagesc(imMWF); title('MWF'); colorbar; caxis(MWFset{i_slice}.MWFmapClim); colormap('jet'); saveas(h1, [dest{i_slice} 'CPMG_MWF'],'png');
+    h2 = figure(2); axis image; imagesc(imAlpha); title('flip angle'); colorbar; caxis(MWFset{i_slice}.alphamapClim); colormap('jet'); saveas(h2, [dest{i_slice} 'CPMG_flipangle'],'png');
+    h3 = figure(3); axis image; imagesc(imDn); title('Proton density'); colorbar; caxis(MWFset{i_slice}.dnmapClim); colormap('jet'); saveas(h3, [dest{i_slice} 'CPMG_dn'],'png');
+    h4 = figure(4); axis image; imagesc(imGmT2); title('gmT2'); colorbar; caxis(MWFset{i_slice}.gmT2mapClim); colormap('jet'); saveas(h4, [dest{i_slice} 'CPMG_gmT2'],'png');
+    h5 = figure(5); axis image; imagesc(imSNR); title('SNR'); colorbar; caxis(MWFset{i_slice}.SNRmapClim); colormap('jet'); saveas(h5, [dest{i_slice} 'CPMG_SNR'],'png');
+    h6 = figure(6); axis image; imagesc(imMisfit); title('misfit'); colorbar; caxis(MWFset{i_slice}.misfitmapClim); colormap('jet'); saveas(h6, [dest{i_slice} 'CPMG_misfit'],'png');
+        
+end
