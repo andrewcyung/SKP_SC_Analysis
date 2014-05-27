@@ -34,8 +34,9 @@ load(['F:\SKP-SC analysis\' 'SKP_histo_stain']) %loads histo_stain
 
 n_MRImap = length(MRImap_id);
 n_stain = length(histo_stain);
+for i_subject=[1]
 
-for i_subject=[1:14]
+% for i_subject=[1:14]
     id = IDtag{i_subject}.id;
     disp(['id =' id]);
     SliceDatasets = cell([1,5]);
@@ -85,7 +86,7 @@ for i_subject=[1:14]
                 thumbnail_path = [HistoSrc_basepath 'HistoParMap_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '_' histo_varname{i_map} '.tif'];
                 eval(['data = ' histo_varname{i_map} ';']);
                 SliceDatasets{i_slice} = SliceDatasets{i_slice}.updateParxDataset('MRIPixelGrid',dataset_objname{i_map},data,thumbnail_path);
-                section_range = matchkey{i_subject}.histoextent(i_slice,1);
+                section_range = matchkey{i_subject}.histoextent(i_slice,:);
                 setindex = histo_stain{i_stain}.setindex;
                 section_indices = setdiff(section_range(1):section_range(2),matchkey{i_subject}.excludelist{setindex});
                 n_section = length(section_indices);
@@ -94,34 +95,13 @@ for i_subject=[1:14]
                     curr_upstreamData{i_section} = struct;
                     curr_upstreamData{i_section}.name = [histo_stain{i_stain}.name ' section ' num2str(section_indices(i_section)) ' w/ROIgrid'];
                     curr_upstreamData{i_section}.srcfile = num2str(section_indices(i_section));
-                    curr_upstreamData{i_section}.dirpath = [rootpath id '\04-Preprocessing\05-Histology-CropforIntersetReg\' histo_stain{i_stain}.setdir '\' histo_stain{i_stain}.dirname '\'];
-                    curr_upstreamData{i_section}.dispFcnName = 'DisplayZoomedHistIm_PixelGridROI';
-                    
-                    
-                    MRI2Histo_path = [rootpath id '\' '05-Registration\04-MRI_AxonSum_MI_Affine\02-Results\' slice_name{i_slice}];
-                    if exist([MRI2Histo_path 'imTrW_tfm1.tfm']) == 2
-                        tfm_filename_MRI2HistoSum = 'imTrW_tfm1.tfm';
-                    elseif exist ([MRI2Histo_path 'fid_tfm.tfm']) == 2
-                        tfm_filename_MRI2HistoSum = 'fid_tfm.tfm';
-                    else
-                        disp(['imTrW_tfm1.tfm nor fid_tfm.tfm could be found'])
-                    end
-
-                    AxonTfm_path = [rootpath id '\' '05-Registration\03-Axon_BtwnSectionSmooth_Rigid\02-Results\' slice_name{i_slice}];
-                    tfm_filelist = rdir([AxonTfm_path num2str(curr_index) '_transform*.tfm']);
-                    if length(tfm_filelist)>0
-                        %if multiple tfm files found for a section use the one with the higher number
-                        AxonSection2HistoSum_tfm_filepath = tfm_filelist(end).name;
-                    else
-                        AxonSection2HistoSum_tfm_filepath = identity_tfm_filepath;
-                    end
-                    
-                    
-                    
-                    curr_upstreamData{i_section}.options = containers.Map({'MRI_interpscale',80},...
-                                                                          {'tfm_MRI2HistSum_filename',tfm_filename_MRI2HistoSum},...
-                                                                          {'tfm_HistRefSection2HistSum_filename',
-                    
+                    curr_upstreamData{i_section}.dirpath = [rootpath id '\04-Preprocessing\05-Histology-CropforIntersetReg\' histo_stain{i_stain}.setdir '\' histo_stain{i_stain}.dirname];
+                    ROIgrid_filename = ['ROIGrid_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '.mat'];
+                    ROIgrid_dir = [rootpath 'id' '\06-Transformation\01-HistologyParMaps\02-Results\'];
+                    segmask_filename = ['Segmap_with_exclmask_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '.mat'];
+                    curr_upstreamData{i_section}.options = containers.Map({'ROIGrid_path','segmask_path','viewmode'},...
+                                                                          {[ROIgrid_dir ROIgrid_filename],[ROIgrid_dir segmask_filename],'zoomed'});
+                    curr_upstreamData{i_section}.dispFcnName = 'DisplayHistoPhoto_ROIoverlay';
                 end
             end
         end

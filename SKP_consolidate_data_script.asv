@@ -34,8 +34,9 @@ load(['F:\SKP-SC analysis\' 'SKP_histo_stain']) %loads histo_stain
 
 n_MRImap = length(MRImap_id);
 n_stain = length(histo_stain);
+for i_subject=[1]
 
-for i_subject=[1:14]
+% for i_subject=[1:14]
     id = IDtag{i_subject}.id;
     disp(['id =' id]);
     SliceDatasets = cell([1,5]);
@@ -96,11 +97,13 @@ for i_subject=[1:14]
                     curr_upstreamData{i_section}.srcfile = num2str(section_indices(i_section));
                     curr_upstreamData{i_section}.dirpath = [rootpath id '\04-Preprocessing\05-Histology-CropforIntersetReg\' histo_stain{i_stain}.setdir '\' histo_stain{i_stain}.dirname '\'];
                     curr_upstreamData{i_section}.dispFcnName = 'DisplayZoomedHistIm_PixelGridROI';
-                   
-                    curr_upstreamData{i_section}.options = containers.Map({'ROIGrid',80},...
-                                                                          {'tfm_MRI2HistSum_filename',tfm_filename_MRI2HistoSum},...
-                                                                          {'tfm_HistRefSection2HistSum_filename',
-                    
+                    ROIgrid_filename = ['ROIGrid_' id '_' slice_name{i_slice} '_' histo_stsain{i_stain}.name '.mat'];
+                    ROIGrid_dir = [rootpath 'id' '\06-Transformation\01-HistologyParMaps\02-Results\'];
+                    segmask_filename = [Segmap_with_exclmask_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '.mat'];
+                    curr_upstreamData{i_section}.options = containers.Map({'ROIGrid_path',[ROIgrid_dir ROIGrid_filename]},...
+                                                                          {'segmask_path',[ROIgrid_dir segmask_filename]},...
+                                                                          {'viewmode','zoomed'});
+                    curr_upstreamData{i_section}.dispFcnName = 'DisplayHistoPhoto_ROIoverlay
                 end
             end
         end

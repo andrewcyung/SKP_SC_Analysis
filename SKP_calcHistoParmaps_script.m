@@ -18,7 +18,9 @@ load(['F:\SKP-SC analysis\' 'SKP_matchkey_ay_original']) %loads matchkey
 load(['F:\SKP-SC analysis\' 'SKP_status']) %loads status
 load(['F:\SKP-SC analysis\' 'SKP_histo_stain']) %loads histo_stain
 
-for j=[1:14]
+% for j=[1:14]
+for j=[1]
+
     id = IDtag{j}.id;
     disp(['id =' id]);
     
@@ -73,6 +75,7 @@ for j=[1:14]
                         inclmask = imread([incl_seg_pathname num2str(curr_index) '.ov1']);
                         exclmask{r} = xor(inclmask,wholemask);
                         segmap{r} = segmap{r} & inclmask;
+                        segmap_with_exclmask{r} = uint8(segmap{r} & ~exclmask{r});
                     end
                 end
             end
@@ -89,6 +92,7 @@ for j=[1:14]
             
             HistoParmap_matfilename = ['HistoParMap_' id '_' slice_name{i} '_' histo_stain{k}.name '.mat'];
             save([src_basepath HistoParmap_matfilename],'AreaFraction','AvgOD_Whole','AvgOD_AboveThresh');
+            save([src_basepath 'Segmap_with_exclmask_' id '_' slice_name{i} '_' histo_stain{k}.name '.mat'],'segmap_with_exclmask');
             
             HistoParmap_thumbnailname{1} = ['HistoParMap_' id '_' slice_name{i} '_' histo_stain{k}.name '_AvgOD_Whole.tif'];
             HistoParmap_thumbnailname{2} = ['HistoParMap_' id '_' slice_name{i} '_' histo_stain{k}.name '_AvgOD_AboveThresh.tif'];
