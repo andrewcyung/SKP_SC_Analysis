@@ -96,29 +96,8 @@ for i_subject=[1:14]
                     curr_upstreamData{i_section}.srcfile = num2str(section_indices(i_section));
                     curr_upstreamData{i_section}.dirpath = [rootpath id '\04-Preprocessing\05-Histology-CropforIntersetReg\' histo_stain{i_stain}.setdir '\' histo_stain{i_stain}.dirname '\'];
                     curr_upstreamData{i_section}.dispFcnName = 'DisplayZoomedHistIm_PixelGridROI';
-                    
-                    
-                    MRI2Histo_path = [rootpath id '\' '05-Registration\04-MRI_AxonSum_MI_Affine\02-Results\' slice_name{i_slice}];
-                    if exist([MRI2Histo_path 'imTrW_tfm1.tfm']) == 2
-                        tfm_filename_MRI2HistoSum = 'imTrW_tfm1.tfm';
-                    elseif exist ([MRI2Histo_path 'fid_tfm.tfm']) == 2
-                        tfm_filename_MRI2HistoSum = 'fid_tfm.tfm';
-                    else
-                        disp(['imTrW_tfm1.tfm nor fid_tfm.tfm could be found'])
-                    end
-
-                    AxonTfm_path = [rootpath id '\' '05-Registration\03-Axon_BtwnSectionSmooth_Rigid\02-Results\' slice_name{i_slice}];
-                    tfm_filelist = rdir([AxonTfm_path num2str(curr_index) '_transform*.tfm']);
-                    if length(tfm_filelist)>0
-                        %if multiple tfm files found for a section use the one with the higher number
-                        AxonSection2HistoSum_tfm_filepath = tfm_filelist(end).name;
-                    else
-                        AxonSection2HistoSum_tfm_filepath = identity_tfm_filepath;
-                    end
-                    
-                    
-                    
-                    curr_upstreamData{i_section}.options = containers.Map({'MRI_interpscale',80},...
+                   
+                    curr_upstreamData{i_section}.options = containers.Map({'ROIGrid',80},...
                                                                           {'tfm_MRI2HistSum_filename',tfm_filename_MRI2HistoSum},...
                                                                           {'tfm_HistRefSection2HistSum_filename',
                     
