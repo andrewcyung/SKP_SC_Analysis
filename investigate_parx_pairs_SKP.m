@@ -31,7 +31,7 @@ disp_attributes.marker = ['+','o','*','.','x','s','d','p','h','^','v','>','<','+
 
 requested_members.('group') = {'8wk'};
 requested_members.('subject') = {'11'};
-requested_members.('slice') = {'1EdgeCaudal'};
+requested_members.('slice') = {'1EdgeCaudal','2MidCaudal'};
 % requested_members.('slice') = {'2MidCaudal'};
 % requested_members.('slice') = {'3Epicentre'};
 % requested_members.('slice') = {'4MidCranial'};

@@ -86,7 +86,7 @@ for i_subject=[1]
                 thumbnail_path = [HistoSrc_basepath 'HistoParMap_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '_' histo_varname{i_map} '.tif'];
                 eval(['data = ' histo_varname{i_map} ';']);
                 SliceDatasets{i_slice} = SliceDatasets{i_slice}.updateParxDataset('MRIPixelGrid',dataset_objname{i_map},data,thumbnail_path);
-                section_range = matchkey{i_subject}.histoextent(i_slice,1);
+                section_range = matchkey{i_subject}.histoextent(i_slice,:);
                 setindex = histo_stain{i_stain}.setindex;
                 section_indices = setdiff(section_range(1):section_range(2),matchkey{i_subject}.excludelist{setindex});
                 n_section = length(section_indices);
@@ -95,15 +95,14 @@ for i_subject=[1]
                     curr_upstreamData{i_section} = struct;
                     curr_upstreamData{i_section}.name = [histo_stain{i_stain}.name ' section ' num2str(section_indices(i_section)) ' w/ROIgrid'];
                     curr_upstreamData{i_section}.srcfile = num2str(section_indices(i_section));
-                    curr_upstreamData{i_section}.dirpath = [rootpath id '\04-Preprocessing\05-Histology-CropforIntersetReg\' histo_stain{i_stain}.setdir '\' histo_stain{i_stain}.dirname '\'];
-                    curr_upstreamData{i_section}.dispFcnName = 'DisplayZoomedHistIm_PixelGridROI';
-                    ROIgrid_filename = ['ROIGrid_' id '_' slice_name{i_slice} '_' histo_stsain{i_stain}.name '.mat'];
-                    ROIGrid_dir = [rootpath 'id' '\06-Transformation\01-HistologyParMaps\02-Results\'];
-                    segmask_filename = [Segmap_with_exclmask_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '.mat'];
-                    curr_upstreamData{i_section}.options = containers.Map({'ROIGrid_path',[ROIgrid_dir ROIGrid_filename]},...
-                                                                          {'segmask_path',[ROIgrid_dir segmask_filename]},...
-                                                                          {'viewmode','zoomed'});
-                    curr_upstreamData{i_section}.dispFcnName = 'DisplayHistoPhoto_ROIoverlay
+                    curr_upstreamData{i_section}.dirpath = [rootpath id '\04-Preprocessing\05-Histology-CropforIntersetReg\' histo_stain{i_stain}.setdir '\' histo_stain{i_stain}.dirname];
+                    ROIgrid_filename = ['ROIGrid_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '.mat'];
+                    ROIgrid_dir = [rootpath 'id' '\06-Transformation\01-HistologyParMaps\02-Results\'];
+                    segmask_filename = ['Segmap_with_exclmask_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '.mat'];
+                    curr_upstreamData{i_section}.options = containers.Map({'ROIGrid_path','segmask_path','viewmode'},...
+                                                                          {[ROIgrid_dir ROIgrid_filename],[ROIgrid_dir segmask_filename],'zoomed'});
+                    curr_upstreamData{i_section}.dispFcnName = 'DisplayHistoPhoto_ROIoverlay';
+                    SliceDatasets{i_slice} = SliceDatasets{i_slice}.addUpstreamDataStruct('MRIPixelGrid',curr_datasetobj_name,curr_upstreamData);
                 end
             end
         end

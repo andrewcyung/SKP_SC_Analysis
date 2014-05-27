@@ -67,9 +67,8 @@ if strcmp(click_type,'alt')
     disp(thumbnailpath_y);
     
     % display upstreamData for x and y parameter maps
-    upstreamData = upstreamData_x{1};
-    displayUpstreamData(upstreamData,row,col,h_fig_upstreamData_x,parname_x);
-    displayUpstreamData(upstreamData,row,col,h_fig_upstreamData_y,parname_y);
+    displayUpstreamData(upstreamData_x,row,col,h_fig_upstreamData_x,parname_x);
+    displayUpstreamData(upstreamData_y,row,col,h_fig_upstreamData_y,parname_y);
 
     
 end

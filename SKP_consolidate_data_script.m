@@ -80,6 +80,7 @@ for i_subject=[1]
             
             dataset_objname = {[histo_stain{i_stain}.name '_AvgOD'], [histo_stain{i_stain}.name '_AvgODThresh'], [histo_stain{i_stain}.name '_AreaFraction']};
             histo_varname = {'AvgOD_Whole','AvgOD_AboveThresh','AreaFraction'};
+            histo_varname_CollatedDataset = {'AvgOD','AvgODThresh','AreaFraction'};
             for i_map=1:3
                 HistoSrc_path = [HistoSrc_basepath 'HistoParMap_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '.mat'];
                 load(HistoSrc_path);
@@ -95,13 +96,16 @@ for i_subject=[1]
                     curr_upstreamData{i_section} = struct;
                     curr_upstreamData{i_section}.name = [histo_stain{i_stain}.name ' section ' num2str(section_indices(i_section)) ' w/ROIgrid'];
                     curr_upstreamData{i_section}.srcfile = num2str(section_indices(i_section));
+                    curr_upstreamData{i_section}.filetype = '.tif';
+                    curr_upstreamData{i_section}.im2src_tfm = NaN;
                     curr_upstreamData{i_section}.dirpath = [rootpath id '\04-Preprocessing\05-Histology-CropforIntersetReg\' histo_stain{i_stain}.setdir '\' histo_stain{i_stain}.dirname];
                     ROIgrid_filename = ['ROIGrid_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '.mat'];
-                    ROIgrid_dir = [rootpath 'id' '\06-Transformation\01-HistologyParMaps\02-Results\'];
+                    ROIgrid_dir = [rootpath id '\06-Transformation\01-HistologyParMaps\02-Results\'];
                     segmask_filename = ['Segmap_with_exclmask_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '.mat'];
-                    curr_upstreamData{i_section}.options = containers.Map({'ROIGrid_path','segmask_path','viewmode'},...
-                                                                          {[ROIgrid_dir ROIgrid_filename],[ROIgrid_dir segmask_filename],'zoomed'});
+                    curr_upstreamData{i_section}.options = containers.Map({'sectionindex','ROIGrid_path','segmask_path','viewmode'},...
+                                                                          {section_indices(i_section),[ROIgrid_dir ROIgrid_filename],[ROIgrid_dir segmask_filename],'zoomed'});
                     curr_upstreamData{i_section}.dispFcnName = 'DisplayHistoPhoto_ROIoverlay';
+                    SliceDatasets{i_slice} = SliceDatasets{i_slice}.addUpstreamDataStruct('MRIPixelGrid',[histo_stain{i_stain}.name '_' histo_varname_CollatedDataset{i_map}],curr_upstreamData);
                 end
             end
         end
