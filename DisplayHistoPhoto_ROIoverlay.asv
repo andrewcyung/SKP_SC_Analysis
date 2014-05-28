@@ -8,29 +8,31 @@ section_indices = cell2mat(ROIgrid_variable.goodSection_index);
 curr_section_index = find(section_indices==options('sectionindex'));
 viewmode = options('viewmode');
 curr_ROIgrid = ROIgrid_variable.ROIgrid{curr_section_index};
+curr_segmask = imread(segmap_variable.segmask_path{curr_section_index});
 grid_index = intersect(find(ROIgrid_variable.ROIgrid_i==row),find(ROIgrid_variable.ROIgrid_j==col));
 ROI_mask = false(size(curr_ROIgrid));
 ROI_mask(find(curr_ROIgrid==grid_index)) = true;
 outline = bwboundaries(ROI_mask);
 n_boundaries = length(outline);
+
 hold on
 plot(outline{1}(:,2), outline{1}(:,1), 'Color', 'y', 'LineWidth', 2)
-
 % Make the outline box invisible to hit tests so that it doesn't interfere
 % with zoom clicks
-findobj
-h_children = get(gca,'Children');
-n_axis_children = length(h_children);
-for i_child=1:n_axis_children
-    set(h_children(i_child),'HitTest','off');
-end
-
+h_rect = findobj(gca,'Type','rectangle');
+set(h_rect,'HitTest','off');
 hold off
 
-viewmode = 'unzoomed';
-set(imhandles(gca),'ButtonDownFcn',{@changeZoom})
+hold on
 
-    function changeZoom(src,event)
+
+hold off
+viewmode = 'unzoomed';
+showSegmask = false;
+
+set(imhandles(gca),'ButtonDownFcn',{@dispatchClicks_upstreamFigure})
+
+    function dispatchClicks_upstreamFigure(src,event)
         click_type = get(h_fig,'SelectionType');
         if strcmp(click_type,'alt')
             if strcmp(viewmode,'zoomed')
@@ -38,7 +40,6 @@ set(imhandles(gca),'ButtonDownFcn',{@changeZoom})
             elseif strcmp(viewmode,'unzoomed')
                 viewmode = 'zoomed';
             end
-            
             hold on
             if strcmp(viewmode,'zoomed')
                 xmin = min(outline{1}(:,2));
@@ -59,6 +60,10 @@ set(imhandles(gca),'ButtonDownFcn',{@changeZoom})
             xlim(xlimits);
             ylim(ylimits);
             hold off
+        elseif strcmp(click_type,'extend')
+            showSegmask = ~showSegMask;
+            if 
+            
         end
     end
 end

@@ -3,29 +3,42 @@ function DisplayHistoPhoto_ROIoverlay(h_fig,row,col,im2src_tfm,histoImage,option
 figure(h_fig);
 imshow(histoImage,'parent',gca);%extra gca parameters prevent the image from moving to main monitor if it is dual monitor setup
 ROIgrid_variable = load(options('ROIGrid_path'));
-segmap_variable = load(options('segmask_path'));
+segmap_variable = load(options('segmask_path'));%loads segmap_with_exclmask
 section_indices = cell2mat(ROIgrid_variable.goodSection_index);
 curr_section_index = find(section_indices==options('sectionindex'));
 viewmode = options('viewmode');
 curr_ROIgrid = ROIgrid_variable.ROIgrid{curr_section_index};
+curr_segmask =segmap_variable.segmap_with_exclmask{curr_section_index};
+dim_segmask = size(curr_segmask);
+rgb_segmask = zeros(dim_segmask(1),dim_segmask(2),3);
+rgb_segmask(:,:,1) = curr_segmask;
+
+
 grid_index = intersect(find(ROIgrid_variable.ROIgrid_i==row),find(ROIgrid_variable.ROIgrid_j==col));
 ROI_mask = false(size(curr_ROIgrid));
 ROI_mask(find(curr_ROIgrid==grid_index)) = true;
 outline = bwboundaries(ROI_mask);
 n_boundaries = length(outline);
+
 hold on
 plot(outline{1}(:,2), outline{1}(:,1), 'Color', 'y', 'LineWidth', 2)
-
 % Make the outline box invisible to hit tests so that it doesn't interfere
 % with zoom clicks
 h_rect = findobj(gca,'Type','rectangle');
 set(h_rect,'HitTest','off');
 hold off
 
-viewmode = 'unzoomed';
-set(imhandles(gca),'ButtonDownFcn',{@changeZoom})
+hold on
+h_overlay = imshow(rgb_segmask);
+set(h_overlay,'AlphaData',0.5);
+hold off
 
-    function changeZoom(src,event)
+viewmode = 'unzoomed';
+showSegmask = false;
+
+set(imhandles(gca),'ButtonDownFcn',{@dispatchClicks_upstreamFigure})
+
+    function dispatchClicks_upstreamFigure(src,event)
         click_type = get(h_fig,'SelectionType');
         if strcmp(click_type,'alt')
             if strcmp(viewmode,'zoomed')
@@ -33,7 +46,6 @@ set(imhandles(gca),'ButtonDownFcn',{@changeZoom})
             elseif strcmp(viewmode,'unzoomed')
                 viewmode = 'zoomed';
             end
-            
             hold on
             if strcmp(viewmode,'zoomed')
                 xmin = min(outline{1}(:,2));
@@ -54,6 +66,13 @@ set(imhandles(gca),'ButtonDownFcn',{@changeZoom})
             xlim(xlimits);
             ylim(ylimits);
             hold off
+        elseif strcmp(click_type,'extend')
+            showSegmask = ~showSegmask;
+            if showSegmask
+                set(h_overlay,'AlphaData',0);
+            else
+                set(h_overlay,'AlphaData',0.5);
+            end
         end
     end
 end
