@@ -18,8 +18,8 @@ load(['F:\SKP-SC analysis\' 'SKP_matchkey_ay_original']) %loads matchkey
 load(['F:\SKP-SC analysis\' 'SKP_status']) %loads status
 load(['F:\SKP-SC analysis\' 'SKP_histo_stain']) %loads histo_stain
 
+for j=[3]
 % for j=[1:14]
-for j=[1]
 
     id = IDtag{j}.id;
     disp(['id =' id]);
@@ -31,8 +31,8 @@ for j=[1]
     seg_whole_subpath = '07-Inclusion Areas for Analysis\'; 
     MRIsrc_basepath = [rootpath id '\' '04-Preprocessing\07-MRI initial flip alignment\02-Results\'];
     
-%     for i=4
-    for i=status{j}.isReg.AxonSum2MRI
+    for i=4
+%     for i=status{j}.isReg.AxonSum2MRI
 
         disp(['MRI slice = ' slice_name{i}]);
 

@@ -129,6 +129,8 @@ for i_hue=1:n_hue
             
             info.coord = coordseries;
             for i_vec=1:n_vec
+                info.parname_x = parname_x;
+                info.parname_y = parname_y;
                 info.thumbnailpath_x{i_vec} = xcontents{i_vec}.thumbnail_path;
                 info.thumbnailpath_y{i_vec} = ycontents{i_vec}.thumbnail_path;
                 info.tfm_x{i_vec} = xcontents{i_vec}.tfm_parx2srcim;

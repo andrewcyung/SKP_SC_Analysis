@@ -63,8 +63,8 @@ if strcmp(click_type,'alt')
     end
     
     disp([parname_x ' value = ' num2str(chosen_x), ' ' parname_y ' value = ' num2str(chosen_y) ' row = ' num2str(row) ' col = ' num2str(col)]);
-    disp(thumbnailpath_x);
-    disp(thumbnailpath_y);
+%     disp(thumbnailpath_x);
+%     disp(thumbnailpath_y);
     
     % display upstreamData for x and y parameter maps
     displayUpstreamData(upstreamData_x,row,col,h_fig_upstreamData_x,parname_x);

@@ -238,7 +238,6 @@ MRImap_id{11}.upstreamData{1} = struct('name','',...
                                        'options',containers.Map,...
                                        'disp_fcn','');
                                    
-
 save SKP-MRImap_id MRImap_id
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -44,6 +44,9 @@ selectedPointX = selectedXVec(selectedIndex);
 selectedPointY = selectedYVec(selectedIndex);
 selectedSeriesSubset = selectedVec(selectedIndex);
 
+disp([info.parname_x ' value = ' num2str(selectedPointX), ' ' info.parname_y ' value = ' num2str(selectedPointY) ' row = ' num2str(clicked_point_y) ' col = ' num2str(clicked_point_x)]);
+
+
 h_scatterPlotHighlightBox = findobj(h_scatterPlot,'Type','rectangle');
 scatterBoxPosition = get(h_scatterPlotHighlightBox,'Position');
 scatterBoxWidth = scatterBoxPosition(3);

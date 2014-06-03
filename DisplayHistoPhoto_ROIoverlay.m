@@ -5,7 +5,7 @@ imshow(histoImage,'parent',gca);%extra gca parameters prevent the image from mov
 ROIgrid_variable = load(options('ROIGrid_path'));
 segmap_variable = load(options('segmask_path'));%loads segmap_with_exclmask
 section_indices = cell2mat(ROIgrid_variable.goodSection_index);
-curr_section_index = find(section_indices==options('sectionindex'));
+curr_section_index = find(section_indices==cell2mat(options('sectionindex')));
 viewmode = options('viewmode');
 curr_ROIgrid = ROIgrid_variable.ROIgrid{curr_section_index};
 curr_segmask =segmap_variable.segmap_with_exclmask{curr_section_index};

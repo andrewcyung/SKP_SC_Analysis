@@ -29,9 +29,12 @@ disp_attributes.hue = [0 1 2 3 4 5]/6;
 disp_attributes.shade = [0.5 0.4 0.3 0.6 0.7]; 
 disp_attributes.marker = ['+','o','*','.','x','s','d','p','h','^','v','>','<','+'];
 
-requested_members.('group') = {'8wk'};
-requested_members.('subject') = {'11'};
-requested_members.('slice') = {'1EdgeCaudal','2MidCaudal'};
+requested_members.('group') = {'8wk','Media','Cells'};
+% requested_members.('group') = {'Media'};
+% requested_members.('group') = {'Cells'};
+
+requested_members.('subject') = {'18'};
+requested_members.('slice') = {'1EdgeCaudal'};
 % requested_members.('slice') = {'2MidCaudal'};
 % requested_members.('slice') = {'3Epicentre'};
 % requested_members.('slice') = {'4MidCranial'};
@@ -40,7 +43,10 @@ requested_members.('segzone') = {'Dorsal','Ventral','Lateral'};
 
 
 
-parx_pairs = {{'MWF','EC_AvgODThresh'}};
+% parx_pairs = {{'MWF','EC_AvgODThresh'}};
+% parx_pairs = {{'MWF','EC_AvgOD'}};
+parx_pairs = {{'MWF','EC_AreaFraction'}};
+
 n_pairs = length(parx_pairs);
 % parx_pairs = {{'Dlong','MBP_AvgOD'}};
 

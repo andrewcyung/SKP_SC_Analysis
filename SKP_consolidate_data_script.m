@@ -34,9 +34,9 @@ load(['F:\SKP-SC analysis\' 'SKP_histo_stain']) %loads histo_stain
 
 n_MRImap = length(MRImap_id);
 n_stain = length(histo_stain);
-for i_subject=[1]
+% for i_subject=[1]
 
-% for i_subject=[1:14]
+for i_subject=[1:14]
     id = IDtag{i_subject}.id;
     disp(['id =' id]);
     SliceDatasets = cell([1,5]);
@@ -89,13 +89,16 @@ for i_subject=[1]
                 SliceDatasets{i_slice} = SliceDatasets{i_slice}.updateParxDataset('MRIPixelGrid',dataset_objname{i_map},data,thumbnail_path);
                 section_range = matchkey{i_subject}.histoextent(i_slice,:);
                 setindex = histo_stain{i_stain}.setindex;
-                section_indices = setdiff(section_range(1):section_range(2),matchkey{i_subject}.excludelist{setindex});
+                ROIgrid_path = [HistoSrc_basepath 'ROIGrid_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '.mat'];
+                load(ROIgrid_path); %loads goodSection_index
+%                 section_indices = setdiff(section_range(1):section_range(2),matchkey{i_subject}.excludelist{setindex});
+                section_indices = goodSection_index;
                 n_section = length(section_indices);
                 curr_upstreamData = cell(1,n_section);
                 for i_section=1:n_section
                     curr_upstreamData{i_section} = struct;
-                    curr_upstreamData{i_section}.name = [histo_stain{i_stain}.name ' section ' num2str(section_indices(i_section)) ' w/ROIgrid'];
-                    curr_upstreamData{i_section}.srcfile = num2str(section_indices(i_section));
+                    curr_upstreamData{i_section}.name = [histo_stain{i_stain}.name ' section ' num2str(section_indices{i_section}) ' w/ROIgrid'];
+                    curr_upstreamData{i_section}.srcfile = num2str(section_indices{i_section});
                     curr_upstreamData{i_section}.filetype = '.tif';
                     curr_upstreamData{i_section}.im2src_tfm = NaN;
                     curr_upstreamData{i_section}.dirpath = [rootpath id '\04-Preprocessing\05-Histology-CropforIntersetReg\' histo_stain{i_stain}.setdir '\' histo_stain{i_stain}.dirname];

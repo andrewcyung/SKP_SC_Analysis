@@ -16,7 +16,8 @@ MRI_varname = {'imADC'; ...
                 'imMisfit'; ...
                 'imMWF'; ...
                 'imSNR'; ...
-                'imTrW'};
+                'imTrW';
+                'imT2Dist'};
              
 MRI_matname = {'ADC.mat'; ...
                 'CPMG_flipangle.mat'; ...
@@ -28,7 +29,8 @@ MRI_matname = {'ADC.mat'; ...
                 'CPMG_misfit.mat'; ...
                 'CPMG_MWF.mat'; ...
                 'CPMG_SNR.mat'; ...
-                'TrW.mat'};
+                'TrW.mat',
+                'CPMG_T2Dist.mat'};
 
 load(['F:\SKP-SC analysis\' 'SKP-IDtag'])
            
@@ -67,14 +69,18 @@ for j=1:14
             load([src_path MRI_matname{k}]);
             eval(['curr_MRImap = ' MRI_varname{k} ';']);
             orientation = MRI_orientation{j};
-            if orientation(1)
-                curr_MRImap = flipdim(curr_MRImap,2);
-            end
-            if orientation(2)
-                curr_MRImap = flipdim(curr_MRImap,1);
-            end
-            if orientation(3)
-                curr_MRImap = curr_MRImap';
+            if strcmp(curr_MRImap,'imT2dist')
+                n_elements = size(curr_MRImap,3);
+            else
+                if orientation(1)
+                    curr_MRImap = flipdim(curr_MRImap,2);
+                end
+                if orientation(2)
+                    curr_MRImap = flipdim(curr_MRImap,1);
+                end
+                if orientation(3)
+                    curr_MRImap = curr_MRImap';
+                end
             end
             eval([MRI_varname{k} ' = curr_MRImap;']);
             save([dest_path MRI_matname{k}],MRI_varname{k});
