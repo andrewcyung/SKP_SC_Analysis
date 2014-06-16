@@ -93,8 +93,7 @@ for i=1:n_pairs
     h_upstream_y=figure(6);
    
     axisextents = [];
-%     h_series = CreateViewframeScatterplot(vf_x,vf_y,parname_x,parname_y,view_categories,requested_members,disp_attributes,'points',axisextents,h_scatter);
-    h_series = create_scatterplot_viewframe(vf_x,vf_y,parname_x,parname_y,disp_attributes,view_categories,h_scatter,h_thumbx,h_thumby,h_upstream_x,h_upstream_y,requested_members,view_categories,'points','Spearman','auto',[]);
+    h_series = CreateViewframeScatterplot(vf_x,vf_y,parname_x,parname_y,disp_attributes,view_categories,h_scatter,h_thumbx,h_thumby,h_upstream_x,h_upstream_y,requested_members,view_categories,'points','Spearman','auto',[]);
     h_legend = legend_viewframe(h_series,requested_members,view_categories,'separateFigure','EastOutside',8);
     figure(h_scatter);
     ti = get(gca,'TightInset');

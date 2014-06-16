@@ -228,18 +228,17 @@ if strcmp(aggregation,'points')
     end
     
     % updateHighlightBoxes.m sets up the mouse click to update the location
-    % of the pixel selection box and call for an update of the upstream
-    % data views
+    % of the pixel selection box and call
     figure(h_fig_thumbnail_x);
     set(h_fig_thumbnail_x,'Name',parname_x,'NumberTitle','off');
     set(gca,'ButtonDownFcn',{@updateHighlightBoxes,h_fig_thumbnail_y,h_ax,h_fig_upstreamData_x,h_fig_upstreamData_y})
+    
     figure(h_fig_thumbnail_y);
     set(h_fig_thumbnail_y,'Name',parname_y,'NumberTitle','off');
     set(gca,'ButtonDownFcn',{@updateHighlightBoxes,h_fig_thumbnail_x,h_ax,h_fig_upstreamData_x,h_fig_upstreamData_y})
-
-    % 
+    
     figure(h_fig_upstreamData_x);
-    set(h_fig_upstreamData_x,'Name',[parname_x ' upstreamData'],'NumberTitle','off');
+    set(h_fig_upstreamData_x,'Name',[parname_x ' upstreamData'],h_fig_upstreamData_x,'NumberTitle','off');
     figure(h_fig_upstreamData_y);
     set(h_fig_upstreamData_y,'Name',[parname_y ' upstreamData'],'NumberTitle','off');
 end
