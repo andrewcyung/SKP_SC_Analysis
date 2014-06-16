@@ -1,8 +1,8 @@
-% sf = make_SKP_storageframe('MRIPixelGrid','Sectors','F:\SKP-SC analysis\','06-Transformation\02-ConsolidatedData\',IDtag);
+sf = make_SKP_storageframe('MRIPixelGrid','Sectors','F:\SKP-SC analysis\','06-Transformation\02-ConsolidatedData\',IDtag);
 rootpath = 'F:\SKP-SC analysis\';
 origdir = pwd;
 cd(rootpath);
-% save('SKP-sf.mat','sf');
+save('SKP-sf.mat','sf');
 % load SKP_sf.mat
 cd(origdir);
 
@@ -45,8 +45,8 @@ requested_members.('segzone') = {'Dorsal','Ventral','Lateral'};
 
 % parx_pairs = {{'MWF','EC_AvgODThresh'}};
 % parx_pairs = {{'MWF','EC_AvgOD'}};
-parx_pairs = {{'MWF','EC_AreaFraction'}};
-% parx_pairs = {{'MWF','FA'}};
+% parx_pairs = {{'MWF','EC_AreaFraction'}};
+parx_pairs = {{'MWF','FA'}};
 % parx_pairs = {{'MWF','MBP_AreaFraction'}};
 
 % parx_pairs = {{'MWF_fixedmisfit','EC_AreaFraction'}};
@@ -94,7 +94,7 @@ for i=1:n_pairs
    
     axisextents = [];
 %     h_series = CreateViewframeScatterplot(vf_x,vf_y,parname_x,parname_y,view_categories,requested_members,disp_attributes,'points',axisextents,h_scatter);
-    h_series = create_scatterplot_viewframe(vf_x,vf_y,parname_x,parname_y,disp_attributes,view_categories,h_scatter,h_thumbx,h_thumby,h_upstream_x,h_upstream_y,requested_members,view_categories,'points','Spearman','auto',[]);
+    [h_series,corrcoeff,corrcoeff_all{i}]= create_scatterplot_viewframe(vf_x,vf_y,parname_x,parname_y,disp_attributes,view_categories,h_scatter,h_thumbx,h_thumby,h_upstream_x,h_upstream_y,requested_members,view_categories,'points','Spearman','auto',[]);
     h_legend = legend_viewframe(h_series,requested_members,view_categories,'separateFigure','EastOutside',8);
     figure(h_scatter);
     ti = get(gca,'TightInset');

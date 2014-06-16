@@ -10,6 +10,7 @@ load(['F:\SKP-SC analysis\' 'SKP-IDtag'])
 load(['F:\SKP-SC analysis\' 'SKP-CPMGDTImatch'])
 load(['F:\SKP-SC analysis\' 'SKP-MRImap_id'])
 load(['F:\SKP-SC analysis\' 'SKP_MRI_orientation'])
+load(['F:\SKP-SC analysis\' 'SKP-upstream_info'])
 
 n_parmap = length(MRImap_id);
 
@@ -17,6 +18,10 @@ cropwidth = [20 20];
 fulldim = [256 256];
 
 for j=1:14
+% for j=[1:3 5:7 9:14]
+
+% for j=[5]
+    
     id = IDtag{j}.id
     src_basepath = ['F:\SKP-SC analysis\' id '\01-Original Images\01-MRI\'];
     dest_basepath = ['F:\SKP-SC analysis\' id '\04-Preprocessing\07-MRI initial flip alignment\02-Results\'];
@@ -39,9 +44,13 @@ for j=1:14
         
         cd(src_path);
         
-        for k=12
-            load([src_path '\' MRImap_id{k}.filename '.mat'])
-            eval(['im = ' MRImap_id{k}.varname ';']);
+        for k=1:length(upstream_info)
+            
+            load([src_path '\' upstream_info{k}.filename '.mat'])
+            eval(['im = ' upstream_info{k}.varname ';']);
+            if iscell(im)
+                im = im{1};
+            end
          
             imCentred = circshift(im,[(fulldim/2-centroid) 0]);
 
@@ -81,7 +90,8 @@ for j=1:14
 
             eval([MRImap_id{k}.varname '= imFlipped;']);
 
-            save([dest_path '\' MRImap_id{k}.filename '.mat'], MRImap_id{k}.varname);
+            save([dest_path '\' upstream_info{k}.filename '.mat'], upstream_info{k}.varname);
+
 
         end
     end

@@ -19,9 +19,9 @@ load(['F:\SKP-SC analysis\' 'SKP-IDtag'])
 %     
 % end
 % save([dest_basepath 'CPMG_echo_images.mat'],'echo_images');
+load([dest_basepath 'CPMG_echo_images.mat']);
 
-
-for j=5:14
+for j=1:14
     id = IDtag{j}.id
     exp_cran2caud = IDtag{j}.MWFexp_cran2caud;
     studypath = IDtag{j}.studypath;
@@ -36,22 +36,28 @@ for j=5:14
     load([ROIpath 'MWFgen_ROI_' id],'ROI');
     
     TE=6.738/1000;
-    isCVNNLS = 1; fixed_misfit = 0;
-    isSEcorr = 1;
+    isCVNNLS = 0; fixed_misfit = 1.0001;
+    isSEcorr = 0;
 %     integlim = [7.5 22 200];
     integlim = [7.5 22 800];
     
      for i_slice=1:5
-        MWFset{i_slice} = MWF_cmd(echo_images{j,i_slice}, ROI{i_slice}, isCVNNLS, isSEcorr, TE, integlim, fixed_misfit);
+        disp([id ' slice ' num2str(i_slice)]);
+         MWFset{i_slice} = MWF_cmd(echo_images{j,i_slice}, ROI{i_slice}, isCVNNLS, isSEcorr, TE, integlim/1000, fixed_misfit);
         
-        imMWF_CVstim = squeeze(MWFset{i_slice}.MWFmap); save([dest{i_slice} 'CPMG_MWF_CVstim'], 'imMWF_CVstim');
 %         imAlpha = squeeze(MWFset{i_slice}.alphamap); save([dest{i_slice} 'CPMG_flipangle'], 'imAlpha');
 %         imDn = squeeze(MWFset{i_slice}.dnmap); save([dest{i_slice} 'CPMG_dn'], 'imDn');
 %         imGmT2 = squeeze(MWFset{i_slice}.gmT2map); save([dest{i_slice} 'CPMG_gmT2'], 'imGmT2');
 %         imSNR = squeeze(MWFset{i_slice}.SNRmap); save([dest{i_slice} 'CPMG_SNR'], 'imSNR');
 %         imMisfit = squeeze(MWFset{i_slice}.misfitmap); save([dest{i_slice} 'CPMG_misfit'], 'imMisfit');
-        imT2dist_CVstim = squeeze(MWFset{i_slice}.T2distmap); save([dest{i_slice} 'CPMG_T2dist_CVstim'], 'imT2dist_CVstim');
-        imEcho_CVstim = squeeze(echo_images(j,i_slice)); save([dest{i_slice} 'CPMG_echo_CVstim'], 'imEcho_CVstim');
+
+%         imMWF_CVstim = squeeze(MWFset{i_slice}.MWFmap); save([dest{i_slice} 'CPMG_MWF_CVstim'], 'imMWF_CVstim');
+%         imT2dist_CVstim = squeeze(MWFset{i_slice}.T2distmap); save([dest{i_slice} 'CPMG_T2dist_CVstim'], 'imT2dist_CVstim');
+%         imEcho_CVstim = squeeze(echo_images(j,i_slice)); save([dest{i_slice} 'CPMG_echo_CVstim'], 'imEcho_CVstim');
+
+        imMWF_fixedmisfit = squeeze(MWFset{i_slice}.MWFmap); save([dest{i_slice} 'CPMG_MWF_fixedmisfit'], 'imMWF_fixedmisfit');
+        imT2dist_fixedmisfit = squeeze(MWFset{i_slice}.T2distmap); save([dest{i_slice} 'CPMG_T2dist_fixedmisfit'], 'imT2dist_fixedmisfit');
+        imEcho_fixedmisfit = squeeze(echo_images(j,i_slice)); save([dest{i_slice} 'CPMG_echo_fixedmisfit'], 'imEcho_fixedmisfit');
         
 %         h1 = figure(1); axis image; imagesc(imMWF); title('MWF'); colorbar; caxis(MWFset{i_slice}.MWFmapClim); colormap('jet'); saveas(h1, [dest{i_slice} 'CPMG_MWF'],'png');
 %         h2 = figure(2); axis image; imagesc(imAlpha); title('flip angle'); colorbar; caxis(MWFset{i_slice}.alphamapClim); colormap('jet'); saveas(h2, [dest{i_slice} 'CPMG_flipangle'],'png');

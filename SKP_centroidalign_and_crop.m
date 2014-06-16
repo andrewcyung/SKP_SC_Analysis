@@ -9,6 +9,7 @@ section_path{5} = '05-edge_cranial';
 load(['F:\SKP-SC analysis\' 'SKP-IDtag'])
 load(['F:\SKP-SC analysis\' 'SKP-CPMGDTImatch'])
 load(['F:\SKP-SC analysis\' 'SKP-MRImap_id'])
+load(['F:\SKP-SC analysis\' 'SKP_MRI_orientation'])
 
 n_parmap = length(MRImap_id);
 
@@ -16,9 +17,12 @@ cropwidth = [20 20];
 fulldim = [256 256];
 
 for j=1:14
+% for j=[1:3 5:7 9:14]
 
     id = IDtag{j}.id
-    src_basepath = ['F:\SKP-SC analysis\' id '\04-Preprocessing\01-rough MRI centroid alignment and cropping\01-Source data\'];
+%     src_basepath = ['F:\SKP-SC analysis\' id '\04-Preprocessing\01-rough MRI centroid alignment and cropping\01-Source data\'];
+    src_basepath = ['F:\SKP-SC analysis\' id '\01-Original Images\01-MRI\'];
+
     dest_basepath = ['F:\SKP-SC analysis\' id '\04-Preprocessing\01-rough MRI centroid alignment and cropping\02-Results\'];
     load([src_basepath 'MWFgen_ROI_' id]); %contains ROI cell array
     
@@ -39,7 +43,8 @@ for j=1:14
         
         cd(src_path);
         
-        for k=1:n_parmap
+%         for k=1:n_parmap
+          for k=12
             load([src_path '\' MRImap_id{k}.filename '.mat'])
             eval(['im = ' MRImap_id{k}.varname ';']);
 

@@ -35,6 +35,8 @@ load(['F:\SKP-SC analysis\' 'SKP_histo_stain']) %loads histo_stain
 n_MRImap = length(MRImap_id);
 n_stain = length(histo_stain);
 % for i_subject=[1]
+% for i_subject=[1:3 5:7 9:14]
+% for i_subject=[5]
 
 for i_subject=[1:14]
     id = IDtag{i_subject}.id;
@@ -55,6 +57,7 @@ for i_subject=[1:14]
         SliceDatasets{i_slice} = SkpCollatedDataset(id,slice_name{i_slice});
         
         for i_map=1:n_MRImap
+%         for i_map=12
             MRIsrc_path = [MRIsrc_basepath section_path{i_slice} MRImap_id{i_map}.filename '.mat'];
             load(MRIsrc_path);
             thumbnail_path = [MRIsrc_basepath section_path{i_slice} MRImap_id{i_map}.varname '.png'];
@@ -78,10 +81,10 @@ for i_subject=[1:14]
                 continue; % go to next iteration in for loop
             end
             
-            dataset_objname = {[histo_stain{i_stain}.name '_AvgOD'], [histo_stain{i_stain}.name '_AvgODThresh'], [histo_stain{i_stain}.name '_AreaFraction']};
-            histo_varname = {'AvgOD_Whole','AvgOD_AboveThresh','AreaFraction'};
-            histo_varname_CollatedDataset = {'AvgOD','AvgODThresh','AreaFraction'};
-            for i_map=1:3
+            dataset_objname = {[histo_stain{i_stain}.name '_AvgOD'], [histo_stain{i_stain}.name '_AvgODThresh'], [histo_stain{i_stain}.name '_AreaFraction'] [histo_stain{i_stain}.name '_IntegODThresh']};
+            histo_varname = {'AvgOD_Whole','AvgOD_AboveThresh','AreaFraction','IntegOD_AboveThresh'};
+            histo_varname_CollatedDataset = {'AvgOD','AvgODThresh','AreaFraction','IntegODThresh'};
+            for i_map=1:4
                 HistoSrc_path = [HistoSrc_basepath 'HistoParMap_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '.mat'];
                 load(HistoSrc_path);
                 thumbnail_path = [HistoSrc_basepath 'HistoParMap_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '_' histo_varname{i_map} '.tif'];

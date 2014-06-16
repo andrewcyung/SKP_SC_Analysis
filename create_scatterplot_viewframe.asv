@@ -39,7 +39,14 @@ function h_plotseries = create_scatterplot_viewframe(viewframe_x,viewframe_y,par
 %           - upstreamData_x
 
 
-
+                info.parname_x = parname_x;
+                info.parname_y = parname_y;
+                info.thumbnailpath_x{i_vec} = xcontents{i_vec}.thumbnail_path;
+                info.thumbnailpath_y{i_vec} = ycontents{i_vec}.thumbnail_path;
+                info.tfm_x{i_vec} = xcontents{i_vec}.tfm_parx2srcim;
+                info.tfm_y{i_vec} = ycontents{i_vec}.tfm_parx2srcim;
+                info.upstreamData_x{i_vec} = xcontents{i_vec}.upstreamDataStruct; 
+                info.upstreamData_y{i_vec} = ycontents{i_vec}.upstreamDataStruct; 
 %   A handle allows the appearance of
 %   the lineseries to change, but also encapsulate the data points.
 
@@ -85,8 +92,8 @@ for i_hue=1:n_hue
             end
             % Or if the requested members in lineseries of xcontents is not
             % the same as in ycontents, then only keep the common ones;
-            x_id = cellfun(@(element)element.id,xcontents,'UniformOutput',false);
-            y_id = cellfun(@(element)element.id,ycontents,'UniformOutput',false);
+            x_id = cellfun(@(element)element.id,xcontents);
+            y_id = cellfun(@(element)element.id,ycontents);
             [~,index_x,index_y] = intersect(x_id,y_id);
             if isempty(index_x) || isempty(index_y)
                 disp(['different set of requested members in ' parname_x ' and ' parname_y]);
@@ -210,6 +217,20 @@ vec_size = size(all_data_x);
 if vec_size(1) == 1
     all_data_x = all_data_x';
     all_data_y = all_data_y';
+end
+
+if ~isempty(all_data_x) || ~isempty(all_data_y)
+    
+    [rho,pval] = corr(all_data_x,all_data_y,'rows','complete','type',corrmode);
+    
+    corrcoeff_all.rho = rho;
+    corrcoeff_all.pval = pval;
+%     title([dimension_order{1} ' ' dimension_order{2} ' ' dimension_order{3} ' rho=' num2str(rho) ' p=' num2str(pval)]);
+else
+    corrcoeff_all.rho = 0;
+    corrcoeff_all.pval = 1;
+    disp('warning: no data has been loaded.  Did you choose a subject that is not in the chosen group?  Do the requested members exist in your storage frame?')
+
 end
 
 figure(h_fig_scatter);

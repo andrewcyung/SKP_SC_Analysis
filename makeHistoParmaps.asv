@@ -8,7 +8,6 @@ function [AreaFraction, AvgOD_Whole, AvgOD_AboveThresh, IntegOD_AboveThresh] = m
 AreaFraction = zeros(imsize);
 AvgOD_Whole = zeros(imsize);
 AvgOD_AboveThresh = zeros(imsize);
-IntegOD_AboveThresh = zeros(imsize);
 
 n_ROI = length(pixel_pos_i);
 n_sections = length(histo_im);
@@ -37,6 +36,6 @@ for q=1:n_ROI
     AreaFraction(pixel_pos_i(q),pixel_pos_j(q)) = n_pts_thresh/n_pts_all;
     AvgOD_Whole(pixel_pos_i(q),pixel_pos_j(q)) = mean(all_data);
     AvgOD_AboveThresh(pixel_pos_i(q),pixel_pos_j(q)) = mean(thresh_data);
-    IntegOD_AboveThresh(pixel_pos_i(q),pixel_pos_j(q)) = sum(thresh_data);
+    IntegID_AboveThreush(pixel_pos_i(q),pixel_pos_j(q)) = 
 end
 

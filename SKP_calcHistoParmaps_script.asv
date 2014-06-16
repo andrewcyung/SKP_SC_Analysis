@@ -18,8 +18,8 @@ load(['F:\SKP-SC analysis\' 'SKP_matchkey_ay_original']) %loads matchkey
 load(['F:\SKP-SC analysis\' 'SKP_status']) %loads status
 load(['F:\SKP-SC analysis\' 'SKP_histo_stain']) %loads histo_stain
 
-% for j=[3]
-for j=[1:14]
+for j=[3]
+% for j=[1:14]
 
     id = IDtag{j}.id;
     disp(['id =' id]);
@@ -86,24 +86,22 @@ for j=[1:14]
             h3=figure(3);subplot_tight(1,4,1);imagesc(AreaFraction); axis off; axis image; caxis([0 1]); title([histo_stain{k}.name ' Area Fraction'])
             h3=figure(3);subplot_tight(1,4,2);imagesc(AvgOD_Whole); axis off; axis image; caxis([0 255]); title([histo_stain{k}.name ' AvgOD Whole'])
             h3=figure(3);subplot_tight(1,4,3);imagesc(AvgOD_AboveThresh); axis off; axis image; caxis([0 255]); title([histo_stain{k}.name ' AvgOD Thresh'],'Color','g')
-            h3=figure(3);subplot_tight(1,4,4);imagesc(IntegOD_AboveThresh); axis off; axis image; title([histo_stain{k}.name ' IntegOD Thresh'],'Color','g')
+            h3=figure(3);subplot_tight(1,4,4);imagesc(IntegOD_AboveThresh); axis off; axis image; caxis([0 255]); title([histo_stain{k}.name ' IntegOD Thresh'],'Color','g')
             tightfig;
             fig_filename = ['HistoParMap_' id '_' slice_name{i} '_' histo_stain{k}.name '.jpg'];
             saveas(h3,[src_basepath '\' fig_filename],'jpg');
             
             HistoParmap_matfilename = ['HistoParMap_' id '_' slice_name{i} '_' histo_stain{k}.name '.mat'];
-            save([src_basepath HistoParmap_matfilename],'AreaFraction','AvgOD_Whole','AvgOD_AboveThresh','IntegOD_AboveThresh');
+            save([src_basepath HistoParmap_matfilename],'AreaFraction','AvgOD_Whole','AvgOD_AboveThresh');
             save([src_basepath 'Segmap_with_exclmask_' id '_' slice_name{i} '_' histo_stain{k}.name '.mat'],'segmap_with_exclmask');
             
             HistoParmap_thumbnailname{1} = ['HistoParMap_' id '_' slice_name{i} '_' histo_stain{k}.name '_AvgOD_Whole.tif'];
             HistoParmap_thumbnailname{2} = ['HistoParMap_' id '_' slice_name{i} '_' histo_stain{k}.name '_AvgOD_AboveThresh.tif'];
             HistoParmap_thumbnailname{3} = ['HistoParMap_' id '_' slice_name{i} '_' histo_stain{k}.name '_AreaFraction.tif'];
-            HistoParmap_thumbnailname{4} = ['HistoParMap_' id '_' slice_name{i} '_' histo_stain{k}.name '_IntegOD_AboveThresh.tif'];
             
             im = mat2gray(AvgOD_Whole); imwrite(im,[src_basepath HistoParmap_thumbnailname{1}]);
             im = mat2gray(AvgOD_AboveThresh); imwrite(im,[src_basepath HistoParmap_thumbnailname{2}]);
             im = mat2gray(AreaFraction); imwrite(im,[src_basepath HistoParmap_thumbnailname{3}]);
-            im = mat2gray(IntegOD_AboveThresh); imwrite(im,[src_basepath HistoParmap_thumbnailname{4}]);
 
         end
     end
