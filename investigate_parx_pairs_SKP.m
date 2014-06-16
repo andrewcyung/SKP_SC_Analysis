@@ -1,4 +1,4 @@
-% sf = make_SKP_storageframe('MRIPixelGrid','Sectors','F:\SKP-SC analysis\','06-Transformation\02-ConsolidatedData\',IDtag);
+sf = make_SKP_storageframe('MRIPixelGrid','Sectors','F:\SKP-SC analysis\','06-Transformation\02-ConsolidatedData\',IDtag);
 rootpath = 'F:\SKP-SC analysis\';
 origdir = pwd;
 cd(rootpath);

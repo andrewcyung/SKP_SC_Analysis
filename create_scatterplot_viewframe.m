@@ -74,30 +74,55 @@ for i_hue=1:n_hue
             vec_index = [];
             n_pts = 0;
 
-% enforce consistency between viewframe_x and viewframe_y:
-            % In other words,if a viewframe entry is empty then make the
-            % corresponding entry in the other viewframe empty as well
+            
+            
             if isempty(xcontents) || isempty(ycontents)
-                xcontents = [];
-                ycontents = [];
+                if ~isempty(xcontents)
+                    xcontents = [];
+                elseif ~isempty(ycontents)
+                    ycontents = [];
+                end
                 h_plotseries(i_hue,i_shade,i_marker) = 0;
                 continue;
+            else
+                n_x = length(xcontents); n_y = length(ycontents);
+                if n_x ~= n_y
+                    disp('danger');
+                    x_id = cellfun(@(element)element.id,xcontents);
+                    y_id = cellfun(@(element)element.id,ycontents);
+                    [~,index_x,index_y] = intersect(x_id,y_id);
+                    viewframe_x{i_hue}{i_shade}{i_marker} = xcontents(index_x);
+                    viewframe_y{i_hue}{i_shade}{i_marker} = ycontents(index_y);
+                end
             end
-            % Or if the requested members in lineseries of xcontents is not
-            % the same as in ycontents, then only keep the common ones;
-            x_id = cellfun(@(element)element.id,xcontents,'UniformOutput',false);
-            y_id = cellfun(@(element)element.id,ycontents,'UniformOutput',false);
-            [~,index_x,index_y] = intersect(x_id,y_id);
-            if isempty(index_x) || isempty(index_y)
-                disp(['different set of requested members in ' parname_x ' and ' parname_y]);
-                xcontents = xcontents(index_x);
-                ycontents = ycontents(index_y);
-                viewframe_x{i_hue}{i_shade}{i_marker} = xcontents(index_x);
-                viewframe_y{i_hue}{i_shade}{i_marker} = ycontents(index_y);
-            end
+
             
-            % Or if the vectors in each lineseries are not the same length,
-            % abort the routine.
+            
+            
+% % enforce consistency between viewframe_x and viewframe_y:
+%             % In other words,if a viewframe entry is empty then make the
+%             % corresponding entry in the other viewframe empty as well
+%             if isempty(xcontents) || isempty(ycontents)
+%                 xcontents = [];
+%                 ycontents = [];
+%                 h_plotseries(i_hue,i_shade,i_marker) = 0;
+%                 continue;
+%             end
+%             % Or if the requested members in lineseries of xcontents is not
+%             % the same as in ycontents, then only keep the common ones;
+%             x_id = cellfun(@(element)element.id,xcontents,'UniformOutput',false);
+%             y_id = cellfun(@(element)element.id,ycontents,'UniformOutput',false);
+%             [~,index_x,index_y] = intersect(x_id,y_id);
+%             if isempty(index_x) || isempty(index_y)
+%                 disp(['different set of requested members in ' parname_x ' and ' parname_y]);
+%                 xcontents = xcontents(index_x);
+%                 ycontents = ycontents(index_y);
+%                 viewframe_x{i_hue}{i_shade}{i_marker} = xcontents(index_x);
+%                 viewframe_y{i_hue}{i_shade}{i_marker} = ycontents(index_y);
+%             end
+%             
+%             % Or if the vectors in each lineseries are not the same length,
+%             % abort the routine.
             n_vec = length(xcontents);
             x_length = cellfun(@(parvec)length(parvec.data),xcontents);
             y_length = cellfun(@(parvec)length(parvec.data),xcontents);
