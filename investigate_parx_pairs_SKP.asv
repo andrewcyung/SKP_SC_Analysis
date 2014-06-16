@@ -27,47 +27,47 @@ view_categories = {'slice','subject','segzone'};
 %  - 27 wpi, cell injection:  36,51,54,55,56
 %  - 27 wpi, media injection: 39,41,58,61,62
 
-    % % Option 1:  focus on one slice of one subject
-    requested_members.('group') = {'8wk','Media','Cells'};
-    requested_members.('segzone') = {'Dorsal','Ventral','Lateral'};
-    requested_members.('subject') = {'41'};
-    % requested_members.('slice') = {'1EdgeCaudal'};
-    % requested_members.('slice') = {'2MidCaudal'};
-    % requested_members.('slice') = {'3Epicentre'};
-    % requested_members.('slice') = {'4MidCranial'};
-    requested_members.('slice') = {'5EdgeCranial'};
-
     % % Option 2:  include the whole study
     % requested_members.('group') = {'Media','Cells','8wk'};
     % requested_members.('subject') = {'11','16','18','20','36','39','41','51','54','55','56','58','61','62'};
     % requested_members.('slice') = {'1EdgeCaudal','2MidCaudal','3Epicentre','4MidCranial','5EdgeCranial'};
     % requested_members.('segzone') = {'Dorsal','Ventral','Lateral'};
 
-% STEP 4: define the parameter maps you want to compare
-    parx_pairs = {{'MWF','EC_AreaFraction'}};
-    
-    % parx_pairs = {{'MWF','MBP_IntegODThresh'}};
-    % parx_pairs = {{'MWF','MBP_AreaFraction'}};
-    % parx_pairs = {{'MWF','EC_IntegODThresh'}};
-    % parx_pairs = {{'MWF','EC_AreaFraction'}};
-    % parx_pairs = {{'Dlong','MBP_IntegODThresh'}};
-    % parx_pairs = {{'Dlong','MBP_AreaFraction'}};
-    % parx_pairs = {{'Dlong','EC_IntegODThresh'}};
-    % parx_pairs = {{'Dlong','EC_AreaFraction'}};
-    % parx_pairs = {{'Dlong','Axon_IntegODThresh'}};
-    % parx_pairs = {{'Dlong','Axon_AreaFraction'}};
-    % parx_pairs = {{'Dtrans','MBP_IntegODThresh'}};
-    % parx_pairs = {{'Dtrans','MBP_AreaFraction'}};
-    % parx_pairs = {{'Dtrans','EC_IntegODThresh'}};
-    % parx_pairs = {{'Dtrans','EC_AreaFraction'}};
-    % parx_pairs = {{'Dtrans','Axon_IntegODThresh'}};
-    % parx_pairs = {{'Dtrans','Axon_AreaFraction'}};
-    % parx_pairs = {{'FA','MBP_IntegODThresh'}};
-    % parx_pairs = {{'FA','MBP_AreaFraction'}};
-    % parx_pairs = {{'FA','EC_IntegODThresh'}};
-    % parx_pairs = {{'FA','EC_AreaFraction'}};
-    % parx_pairs = {{'FA','Axon_IntegODThresh'}};
-    % parx_pairs = {{'FA','Axon_AreaFraction'}};
+    % % Option 1:  focus on one slice of one subject
+requested_members.('group') = {'8wk','Media','Cells'};
+requested_members.('segzone') = {'Dorsal','Ventral','Lateral'};
+requested_members.('subject') = {'41'};
+% requested_members.('slice') = {'1EdgeCaudal'};
+% requested_members.('slice') = {'2MidCaudal'};
+% requested_members.('slice') = {'3Epicentre'};
+% requested_members.('slice') = {'4MidCranial'};
+requested_members.('slice') = {'5EdgeCranial'};
+
+% parx_pairs = {...
+%               {'MWF','MBP_IntegODThresh'}, ...
+%               {'MWF','MBP_AreaFraction'}, ...
+%               {'MWF','EC_IntegODThresh'}, ...
+%               {'MWF','EC_AreaFraction'}, ...
+%               {'Dlong','MBP_IntegODThresh'}, ...
+%               {'Dlong','MBP_AreaFraction'}, ...
+%               {'Dlong','EC_IntegODThresh'}, ...
+%               {'Dlong','EC_AreaFraction'}, ...
+%               {'Dlong','Axon_IntegODThresh'}, ...
+%               {'Dlong','Axon_AreaFraction'}, ...
+%               {'Dtrans','MBP_IntegODThresh'}, ...
+%               {'Dtrans','MBP_AreaFraction'}, ...
+%               {'Dtrans','EC_IntegODThresh'}, ...
+%               {'Dtrans','EC_AreaFraction'}, ...
+%               {'Dtrans','Axon_IntegODThresh'}, ...
+%               {'Dtrans','Axon_AreaFraction'}, ...
+%               {'FA','MBP_IntegODThresh'}, ...
+%               {'FA','MBP_AreaFraction'}, ...
+%               {'FA','EC_IntegODThresh'}, ...
+%               {'FA','EC_AreaFraction'}, ...
+%               {'FA','Axon_IntegODThresh'}, ...
+%               {'FA','Axon_AreaFraction'}};
+
+
 
 SKP_generate_infostruct
 % sf = make_SKP_storageframe('MRIPixelGrid','Sectors','F:\SKP-SC analysis\','06-Transformation\02-ConsolidatedData\',IDtag);
@@ -78,6 +78,13 @@ cd(rootpath);
 % save('SKP-sf.mat','sf');
 load SKP_sf.mat
 cd(origdir);
+
+
+% parx_pairs = {{'MWF','EC_AvgODThresh'}};
+% parx_pairs = {{'MWF','EC_AvgOD'}};
+parx_pairs = {{'MWF','EC_AreaFraction'}};
+% parx_pairs = {{'MWF','FA'}};
+% parx_pairs = {{'MWF','MBP_AreaFraction'}};
 
 n_pairs = length(parx_pairs);
 
