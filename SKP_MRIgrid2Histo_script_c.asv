@@ -207,14 +207,9 @@ for j=[9:9]
                     DestSection_boundy{i_currsection} = cell(1,n_MRIpix);
                     Dest_sectionSize = size(section_im{i_currsection});
 
-                    
-                    [tfm_MRI2Hist{i_currsection},tfm_Hist2MRI{i_currsection}] = DefineTransform_MRIvsHistSection(tfm_MRI2HistoSum,AxonSection2HistoSum_tfm,DestSection2AxonSection_tfm);
-                    tfm_matfilename = ['tfm_' id '_' slice_name{i} '_' histo_stain{k}.name '.mat'];
-                    save([dest_basepath tfm_matfilename],'tfm_MRI2Hist','tfm_Hist2MRI''goodSection_index');                    
-                    
-                    
                     % ROIgrid contains the masks for each pixel ROI
                     ROIgrid{i_currsection} = int16(zeros(Dest_sectionSize));
+                    [tfm_MRI2Hist,tfm_Hist2MRI]DefineTransform_MRIvsHistSection(tfm_MRI2HistoSum,AxonSection2HistoSum_tfm,DestSection2AxonSection_tfm);
                     for s=1:n_MRIpix
                         [DestSection_boundx{i_currsection}{s}, DestSection_boundy{i_currsection}{s}] = MR_to_SingleHist_xy(MRIpix_boundx{s},MRIpix_boundy{s},tfm_MRI2HistoSum,AxonSection2HistoSum_tfm,DestSection2AxonSection_tfm);
                         if GenerateROIGrid
