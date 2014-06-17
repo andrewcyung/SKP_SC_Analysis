@@ -59,8 +59,8 @@ for i_subject=[1:14]
         for i_map=1:n_MRImap
 %         for i_map=12
             MRIsrc_path = [MRIsrc_basepath section_path{i_slice} MRImap_id{i_map}.filename '.mat'];
-            load([rootpath MRIsrc_path]);
-            thumbnail_path = [MRIsrc_basepath section_path{i_slice} MRImap_id{i_map}.varname '.png'];
+            load(MRIsrc_path);
+            thumbnail_path = [rootpath MRIsrc_basepath section_path{i_slice} MRImap_id{i_map}.varname '.png'];
             eval(['data = ' MRImap_id{i_map}.varname ';']);
             curr_datasetobj_name = MRImap_id{i_map}.datasetobj_name;
             SliceDatasets{i_slice} = SliceDatasets{i_slice}.updateParxDataset('MRIPixelGrid',curr_datasetobj_name,data,thumbnail_path);
@@ -86,7 +86,7 @@ for i_subject=[1:14]
             histo_varname_CollatedDataset = {'AvgOD','AvgODThresh','AreaFraction','IntegODThresh'};
             for i_map=1:4
                 HistoSrc_path = [rootpath HistoSrc_basepath 'HistoParMap_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '.mat'];
-                load([HistoSrc_path]);
+                load(HistoSrc_path);
                 thumbnail_path = [HistoSrc_basepath 'HistoParMap_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '_' histo_varname{i_map} '.tif'];
                 eval(['data = ' histo_varname{i_map} ';']);
                 SliceDatasets{i_slice} = SliceDatasets{i_slice}.updateParxDataset('MRIPixelGrid',dataset_objname{i_map},data,thumbnail_path);
@@ -120,7 +120,7 @@ for i_subject=[1:14]
         segzone_names = {'Dorsal','Ventral','Lateral'};
         n_seg = length(segzone_names);
         label_file = 'imFA-label.png';
-        origlabelmap = imread([rootpath seg_path label_file]);
+        origlabelmap = imread([seg_path label_file]);
         for i_seg=1:n_seg
             labelmap = origlabelmap;
             mask = find(labelmap~=i_seg);

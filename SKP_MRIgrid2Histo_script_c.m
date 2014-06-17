@@ -33,7 +33,7 @@ SeeResultsSection = 1;
 
 tfm_identity = maketform('affine',[1 0; 0 1; 0 0]);
 
-for j=[9:9]
+for j=[1:14]
 % for j=[1 3 4 8 9 10]
 % for j=[3 4 8 9 10]
     
@@ -152,8 +152,8 @@ for j=[9:9]
         
         % single-section processing
         n_stain = length(histo_stain);
-%         for k=1:n_stain
-        for k=7    
+        for k=1:n_stain
+%         for k=7    
             h2=figure(2); clf(h2);
             disp(['stain = ' histo_stain{k}.name]);
             HistoSrc_path = [HistoSrc_basepath histo_stain{k}.setdir '\' histo_stain{k}.dirname];
@@ -209,8 +209,6 @@ for j=[9:9]
 
                     
                     [tfm_MRI2Hist{i_currsection},tfm_Hist2MRI{i_currsection}] = DefineTransform_MRIvsHistSection(tfm_MRI2HistoSum,AxonSection2HistoSum_tfm,DestSection2AxonSection_tfm);
-                    tfm_matfilename = ['tfm_' id '_' slice_name{i} '_' histo_stain{k}.name '.mat'];
-                    save([dest_basepath tfm_matfilename],'tfm_MRI2Hist','tfm_Hist2MRI''goodSection_index');                    
                     
                     
                     % ROIgrid contains the masks for each pixel ROI
@@ -251,6 +249,10 @@ for j=[9:9]
                 if GenerateROIGrid
                     ROIgrid_matfilename = ['ROIGrid_' id '_' slice_name{i} '_' histo_stain{k}.name '.mat'];
                     save([dest_basepath ROIgrid_matfilename],'ROIgrid','ROIgrid_i','ROIgrid_j','goodSection_index');
+
+                    tfm_matfilename = ['tfm_' id '_' slice_name{i} '_' histo_stain{k}.name '.mat'];
+                    save([dest_basepath tfm_matfilename],'tfm_MRI2Hist','tfm_Hist2MRI','goodSection_index');                    
+
                 end
             end
         end

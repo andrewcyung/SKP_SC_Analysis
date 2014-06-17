@@ -1,4 +1,4 @@
-function h=legend_viewframe(h_series,requested_members,dimension_order,mode,location,fontsize)
+function h=CreateViewframeLegend(h_series,requested_members,dimension_order,mode,location,fontsize)
 
 [n_hue,n_shade,n_marker] = size(h_series);
 h_series_vec = [];

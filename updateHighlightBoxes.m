@@ -1,4 +1,4 @@
-function updateHighlightBoxes(h_im,event,h_fig_thumbnail_other,h_scatterPlot,h_fig_upstreamData_x,h_fig_upstreamData_y)
+function updateHighlightBoxes(h_im,event,h_fig_thumbnail_other,h_scatterPlot,h_fig_upstreamData_x,h_fig_upstreamData_y,rootpath)
 % update the highlight boxes in the other thumbnail figure and the two
 % upstreamData figures
 h_currentHighlightBox = findobj(gca,'Type','rectangle');

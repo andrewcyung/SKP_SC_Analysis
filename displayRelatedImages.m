@@ -1,4 +1,4 @@
-function displayRelatedImages(h_ax,event,parname_x,parname_y,h_fig_thumbnail_x,h_fig_thumbnail_y,h_fig_upstreamData_x,h_fig_upstreamData_y)
+function displayRelatedImages(h_ax,event,parname_x,parname_y,h_fig_thumbnail_x,h_fig_thumbnail_y,h_fig_upstreamData_x,h_fig_upstreamData_y,rootpath)
 h_fig = ancestor(h_ax,'figure');
 click_type = get(h_fig,'SelectionType');
 
@@ -22,8 +22,8 @@ if strcmp(click_type,'alt')
     height = boxPosition(4);
     set(h_highlightBox,'Position',[chosen_x-width/2,chosen_y-height/2,width,height]);
     series_info = get(h_lineseries(chosen_lineseries),'UserData');
-    thumbnailpath_x = series_info.thumbnailpath_x{chosen_parvec};
-    thumbnailpath_y = series_info.thumbnailpath_y{chosen_parvec};
+    thumbnailpath_x = [rootpath series_info.thumbnailpath_x{chosen_parvec}];
+    thumbnailpath_y = [rootpath series_info.thumbnailpath_y{chosen_parvec}];
     upstreamData_x = series_info.upstreamData_x{chosen_parvec};
     upstreamData_y = series_info.upstreamData_y{chosen_parvec};
     

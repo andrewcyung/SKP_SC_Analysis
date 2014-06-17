@@ -31,8 +31,8 @@ for j=[1:14]
     seg_whole_subpath = '07-Inclusion Areas for Analysis\'; 
     MRIsrc_basepath = [rootpath id '\' '04-Preprocessing\07-MRI initial flip alignment\02-Results\'];
     
-    for i=4
-%     for i=status{j}.isReg.AxonSum2MRI
+%     for i=4
+    for i=status{j}.isReg.AxonSum2MRI
 
         disp(['MRI slice = ' slice_name{i}]);
 
@@ -80,7 +80,7 @@ for j=[1:14]
                 end
             end
             
-            [AreaFraction, AvgOD_Whole, AvgOD_AboveThresh IntegOD_AboveThresh] = makeHistoParmaps(section_im,segmap,exclmask,ROIgrid,ROIgrid_i,ROIgrid_j,size(imTrW));
+            [AreaFraction, AvgOD_Whole, AvgOD_AboveThresh, IntegOD_AboveThresh] = makeHistoParmaps(section_im,segmap,exclmask,ROIgrid,ROIgrid_i,ROIgrid_j,size(imTrW));
             h3=figure(3);
             set(h3,'Position',[0 0 2000 800])
             h3=figure(3);subplot_tight(1,4,1);imagesc(AreaFraction); axis off; axis image; caxis([0 1]); title([histo_stain{k}.name ' Area Fraction'])

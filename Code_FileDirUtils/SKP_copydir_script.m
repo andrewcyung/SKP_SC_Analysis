@@ -1,6 +1,7 @@
 rootpath = 'F:\SKP-SC analysis\';
-basepath = '03-Segmentation\02_Histology\01_Set 1 - P0_GFAP_GFP_10x\';
-
+srcbasepath = '04-Preprocessing\07-MRI initial flip alignment\02-Results';
+rootpath_dest = 'H:\SKP_Subset\';
+destbasepath = '04-Preprocessing\07-MRI initial flip alignment\02-Results';
 
 % section_path{1} = '01-edge_caudal';
 % section_path{2} = '02-mid_caudal';
@@ -14,8 +15,9 @@ origdir = pwd;
 
 for j=1:14
     id = IDtag{j}.id
-    cd([rootpath id '\' basepath]);
-    [status,message,messageid] = copyfile('07-Inclusion Areas for Analysis','08-Exclusion Areas');
+    cd([rootpath id '\']);
+    destpath = [rootpath_dest id '\'];
+    [status,message,messageid] = copyfile(srcbasepath,[destpath destbasepath],'f');
     disp(message);
 end
 

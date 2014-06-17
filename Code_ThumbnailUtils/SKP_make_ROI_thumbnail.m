@@ -83,9 +83,9 @@ else
 end
 
 if strcmp(dest_path,'')
-    [pathstr base ext vrsn] = fileparts(src_impath);
+    [pathstr,base,ext] = fileparts(src_impath);
 else
-    [pathstr base ext vrsn] = fileparts(dest_path);
+    [pathstr,base,ext] = fileparts(dest_path);
 end
 
 delete([pathstr '\' base '.jpg'])

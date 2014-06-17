@@ -69,14 +69,14 @@ view_categories = {'slice','subject','segzone'};
     % parx_pairs = {{'FA','Axon_IntegODThresh'}};
     % parx_pairs = {{'FA','Axon_AreaFraction'}};
 
-SKP_generate_infostruct
-% sf = make_SKP_storageframe('MRIPixelGrid','Sectors','F:\SKP-SC analysis\','06-Transformation\02-ConsolidatedData\',IDtag);
+SKP_GenerateInfostruct;
+sf = make_SKP_storageframe('MRIPixelGrid','Sectors','F:\SKP-SC analysis\','06-Transformation\02-ConsolidatedData\',IDtag);
 storage_layout = {'group','subject','slice','segzone'};
 rootpath = 'F:\SKP-SC analysis\';
 origdir = pwd;
 cd(rootpath);
-% save('SKP-sf.mat','sf');
-load SKP_sf.mat
+save('SKP-sf.mat','sf');
+% load SKP_sf.mat
 cd(origdir);
 
 n_pairs = length(parx_pairs);
@@ -84,8 +84,8 @@ n_pairs = length(parx_pairs);
 for i=1:n_pairs
     parname_x = parx_pairs{i}{1};
     parname_y = parx_pairs{i}{2};
-    vf_x = make_viewframe(parname_x,view_categories,sf,storage_layout,requested_members);
-    vf_y = make_viewframe(parname_y,view_categories,sf,storage_layout,requested_members);
+    vf_x = MakeViewframe(parname_x,view_categories,sf,storage_layout,requested_members);
+    vf_y = MakeViewframe(parname_y,view_categories,sf,storage_layout,requested_members);
     h_scatter=figure(1);
     h_thumbx=figure(2);
     h_thumby=figure(3);
@@ -94,7 +94,7 @@ for i=1:n_pairs
    
     axisextents = [];
     h_series = CreateViewframeScatterplot(vf_x,vf_y,parname_x,parname_y,disp_attributes,view_categories,h_scatter,h_thumbx,h_thumby,h_upstream_x,h_upstream_y,requested_members,view_categories,'points','Spearman','auto',[]);
-    h_legend = legend_viewframe(h_series,requested_members,view_categories,'separateFigure','EastOutside',8);
+    h_legend = CreateViewframeLegend(h_series,requested_members,view_categories,'separateFigure','EastOutside',8);
     figure(h_scatter);
     ti = get(gca,'TightInset');
     set(gca,'Position',[ti(1) ti(2) 1-ti(3)-ti(1) 1-ti(4)-ti(2)]);
