@@ -1,4 +1,4 @@
-function displayUpstreamData(upstreamDataArray,row,col,h_fig_upstream,parname)
+function displayUpstreamData(upstreamDataArray,row,col,h_fig_upstream,parname,rootpath)
 
 hManager = uigetmodemanager(h_fig_upstream);
 set(hManager.WindowListenerHandles,'Enable','off');
@@ -22,17 +22,17 @@ i_upstream = 1;
                     i_upstream = i_upstream+1;
                 end
         end
-        displaySingleUpstreamDataset(upstreamDataArray{i_upstream},row,col,h_fig_upstream,parname)
+        displaySingleUpstreamDataset(upstreamDataArray{i_upstream},row,col,h_fig_upstream,parname,rootpath)
     end
 
-displaySingleUpstreamDataset(upstreamDataArray{1},row,col,h_fig_upstream,parname);
+displaySingleUpstreamDataset(upstreamDataArray{1},row,col,h_fig_upstream,parname,rootpath);
 
 end
 
-function displaySingleUpstreamDataset(upstreamDataset,row,col,h_fig_upstream,parname)
+function displaySingleUpstreamDataset(upstreamDataset,row,col,h_fig_upstream,parname,rootpath)
 
 set(h_fig_upstream,'Name',[parname ' upstreamData: ' upstreamDataset.name]);
-upstreamDataFilename = [upstreamDataset.dirpath upstreamDataset.srcfile upstreamDataset.filetype];
+upstreamDataFilename = [rootpath upstreamDataset.dirpath upstreamDataset.srcfile upstreamDataset.filetype];
 if exist(upstreamDataFilename,'file')
     if strcmp(upstreamDataset.filetype,'.mat')
         if isKey(upstreamDataset.options,'varname')
@@ -47,7 +47,7 @@ if exist(upstreamDataFilename,'file')
     end
     dispFcn = [];
     eval(['dispFcn = @' upstreamDataset.dispFcnName ';']);
-    dispFcn(h_fig_upstream,row,col,upstreamDataset.im2src_tfm,dispQuantity,upstreamDataset.options);
+    dispFcn(h_fig_upstream,row,col,upstreamDataset.im2src_tfm,dispQuantity,upstreamDataset.options,rootpath);
 end
 
 end

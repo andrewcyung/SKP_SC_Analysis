@@ -1,6 +1,6 @@
 origdir = pwd;
-
-cd('F:\SKP-SC analysis\');
+rootpath = 'h:\SKP_Subset\';
+cd(rootpath);
 
 clear slice_name
 

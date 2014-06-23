@@ -1,9 +1,10 @@
-function DisplayHistoPhoto_ROIoverlay(h_fig,row,col,im2src_tfm,histoImage,options)
+function DisplayHistoPhoto_ROIoverlay(h_fig,row,col,im2src_tfm,histoImage,options,rootpath)
 
 figure(h_fig);
 imshow(histoImage,'parent',gca);%extra gca parameters prevent the image from moving to main monitor if it is dual monitor setup
-ROIgrid_variable = load(options('ROIGrid_path'));
-segmap_variable = load(options('segmask_path'));%loads segmap_with_exclmask
+title('toggle mask: middle-click | zoom: right-click | previous view: "," | next view: "."');
+ROIgrid_variable = load([rootpath options('ROIGrid_path')]);
+segmap_variable = load([rootpath options('segmask_path')]);%loads segmap_with_exclmask
 section_indices = cell2mat(ROIgrid_variable.goodSection_index);
 curr_section_index = find(section_indices==cell2mat(options('sectionindex')));
 viewmode = options('viewmode');

@@ -35,7 +35,7 @@ if strcmp(click_type,'alt')
     if exist(thumbnailpath_x,'file')
         figure(h_fig_thumbnail_x);
         imshow(thumbnailpath_x,'parent',gca);
-        set(imhandles(gca),'ButtonDownFcn',{@updateHighlightBoxes,h_fig_thumbnail_y,h_ax,h_fig_upstreamData_x,h_fig_upstreamData_y})
+        set(imhandles(gca),'ButtonDownFcn',{@updateHighlightBoxes,h_fig_thumbnail_y,h_ax,h_fig_upstreamData_x,h_fig_upstreamData_y,rootpath})
         set(gca,'units','normalized');
         set(gca,'Position',[0 0 1 1]);
         set(gca,'units','pixels');
@@ -67,8 +67,8 @@ if strcmp(click_type,'alt')
 %     disp(thumbnailpath_y);
     
     % display upstreamData for x and y parameter maps
-    displayUpstreamData(upstreamData_x,row,col,h_fig_upstreamData_x,parname_x);
-    displayUpstreamData(upstreamData_y,row,col,h_fig_upstreamData_y,parname_y);
+    displayUpstreamData(upstreamData_x,row,col,h_fig_upstreamData_x,parname_x,rootpath);
+    displayUpstreamData(upstreamData_y,row,col,h_fig_upstreamData_y,parname_y,rootpath);
 
     
 end

@@ -55,7 +55,7 @@ set(h_scatterPlotHighlightBox,'Position',...
     [selectedPointX-scatterBoxWidth/2  selectedPointY-scatterBoxHeight/2 scatterBoxWidth scatterBoxHeight]);
 
 upstreamData = info.upstreamData_x{selectedSeriesSubset};
-displayUpstreamData(upstreamData,clicked_point_y,clicked_point_x,h_fig_upstreamData_x,'')
+displayUpstreamData(upstreamData,clicked_point_y,clicked_point_x,h_fig_upstreamData_x,'',rootpath)
 upstreamData = info.upstreamData_y{selectedSeriesSubset};
-displayUpstreamData(upstreamData,clicked_point_y,clicked_point_x,h_fig_upstreamData_y,'');
+displayUpstreamData(upstreamData,clicked_point_y,clicked_point_x,h_fig_upstreamData_y,'',rootpath);
 end

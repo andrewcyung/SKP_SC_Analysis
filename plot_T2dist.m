@@ -1,4 +1,4 @@
-function plot_T2dist(h_targetfig,selectedRow,selectedCol,posnTfm,T2dist,options)
+function plot_T2dist(h_targetfig,selectedRow,selectedCol,posnTfm,T2dist,options,rootpath)
 integlim = [7.5 22 200];
 T2Times = options('T2Times');
 if isnan(posnTfm)

@@ -1,6 +1,6 @@
 
 
-function h_plotseries = create_scatterplot_viewframe(viewframe_x,viewframe_y,parname_x,parname_y,disp_attributes,view_categories,h_fig_scatter,h_fig_thumbnail_x,h_fig_thumbnail_y,h_fig_upstreamData_x,h_fig_upstreamData_y,requested_members,dimension_order,aggregation,corrmode,plotmode,axisextents)
+function h_plotseries = create_scatterplot_viewframe(viewframe_x,viewframe_y,parname_x,parname_y,disp_attributes,view_categories,requested_members,h_fig_scatter,h_fig_thumbnail_x,h_fig_thumbnail_y,h_fig_upstreamData_x,h_fig_upstreamData_y,aggregation,plotmode,axisextents,rootpath)
 % produce a scatterplot using viewframe data (viewframe_x and viewframe_y)
 % to differentiate up to three dimensions in the data.  Colour hue, shade
 % and marker type will be used to represent the three dimensions (given in
@@ -47,7 +47,7 @@ h_plotseries = zeros(n_hue,n_shade,n_marker);
 % Set up scatterplot figure and axes
 figure(h_fig_scatter);
 figtext = ['Hue = ' view_categories{1} ' Shade = ' view_categories{2} ...
-           ' Marker = ' view_categories{3}];
+           ' Marker = ' view_categories{3} ' | Query point: right-click'];
 set(h_fig_scatter,'Name',figtext,'NumberTitle','off');
 clf(h_fig_scatter);
 hold on;
@@ -216,7 +216,7 @@ if strcmp(aggregation,'points')
     % displayRelatedImages.m sets up a right-click to highlight a data
     % point on the scatterplot which will also update the parmap
     % (thumbnail) views and "upstream" views
-    set(h_ax,'ButtonDownFcn',{@displayRelatedImages,parname_x,parname_y,h_fig_thumbnail_x,h_fig_thumbnail_y,h_fig_upstreamData_x,h_fig_upstreamData_y})
+    set(h_ax,'ButtonDownFcn',{@displayRelatedImages,parname_x,parname_y,h_fig_thumbnail_x,h_fig_thumbnail_y,h_fig_upstreamData_x,h_fig_upstreamData_y,rootpath})
     
     % HACK:  set the HitTest property to off for the current lineseries, so
     % that clicking on the point will activate the ButtownDownFcn of the
