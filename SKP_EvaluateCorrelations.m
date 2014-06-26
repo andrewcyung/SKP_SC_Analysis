@@ -1,8 +1,9 @@
 % STEP 1:  define the data dimensions you want to include in the viewframes
-view_categories = {'subject','slice','segzone'}; 
+% view_categories = {'subject','slice','segzone'}; 
+view_categories = {'group','subject','slice'}; 
 
 % STEP 3: define the parameter maps you want to compare
-    parx_pairs = {{'MWF','EC_AreaFraction'},...
+    parx_pairs = {...
         {'MWF','MBP_IntegODThresh'},...
         {'MWF','MBP_AreaFraction'},...
         {'MWF','EC_IntegODThresh'},...
@@ -32,7 +33,7 @@ storage_layout = {'group','subject','slice','segzone'};
 origdir = pwd;
 cd(rootpath);
 % save('SKP-sf.mat','sf');
-% load SKP-sf.mat
+load SKP-sf.mat
 cd(origdir);
 
 
@@ -49,6 +50,9 @@ subjectlist = {'8-11','8-16','8-18','8-20',...
                'C-36','C-51','C-54','C-55','C-56',...
                'M-39','M-41','M-58','M-61','M-62'};
 
+dest_path = [rootpath 'Correlations/'];
+run_name = 'original';
+filelist = cell(1,n_pairs);
 for i=1:n_pairs
 
     parname_x = parx_pairs{i}{1};
@@ -58,30 +62,65 @@ for i=1:n_pairs
     requested_members.('subject') = {'11','16','18','20'};
     vf_x = MakeViewframe(parname_x,view_categories,sf,storage_layout,requested_members);
     vf_y = MakeViewframe(parname_y,view_categories,sf,storage_layout,requested_members);
-    [R_8wk,R_CI_8wk,pval_8wk,R_all_8wk,R_CI_all_8wk,pval_all_8wk] = CalcCorrcoeffViewframe(vf_x,vf_y,'Pearson');
+    [R_8wk,R_upperCI_8wk,R_lowerCI_8wk,pval_8wk] = CalcCorrcoeffViewframe(vf_x,vf_y,'Pearson');
 
     requested_members.('group') = {'Cells'};
     requested_members.('subject') = {'36','51','54','55','56'};
     vf_x = MakeViewframe(parname_x,view_categories,sf,storage_layout,requested_members);
     vf_y = MakeViewframe(parname_y,view_categories,sf,storage_layout,requested_members);
-    [R_Media,R_CI_Media,pval_Media,R_all_Media,R_CI_all_Media,pval_all_Media] = CalcCorrcoeffViewframe(vf_x,vf_y,'Pearson');
+    [R_Media,R_upperCI_Media,R_lowerCI_Media,pval_Media] = CalcCorrcoeffViewframe(vf_x,vf_y,'Pearson');
 
     requested_members.('group') = {'Media'};
     requested_members.('subject') = {'39','41','58','61','62'};
     vf_x = MakeViewframe(parname_x,view_categories,sf,storage_layout,requested_members);
     vf_y = MakeViewframe(parname_y,view_categories,sf,storage_layout,requested_members);
-    [R_Cells,R_CI_Cells,pval_Cells,R_all_Cells,R_CI_all_Cells,pval_all_Cells] = CalcCorrcoeffViewframe(vf_x,vf_y,'Pearson');
+    [R_Cells,R_upperCI_Cells,R_lowerCI_Cells,pval_Cells] = CalcCorrcoeffViewframe(vf_x,vf_y,'Pearson');
     
-    Rmatrix = [squeeze(cell2mat(R_8wk)); squeeze(cell2mat(R_Media)); squeeze(cell2mat(R_Cells))];
+    R_matrix = [squeeze(cell2mat(R_8wk)); squeeze(cell2mat(R_Media)); squeeze(cell2mat(R_Cells))];
+    R_upperCI_matrix = [squeeze(cell2mat(R_upperCI_8wk)); squeeze(cell2mat(R_upperCI_Media)); squeeze(cell2mat(R_upperCI_Cells))];
+    R_lowerCI_matrix = [squeeze(cell2mat(R_lowerCI_8wk)); squeeze(cell2mat(R_lowerCI_Media)); squeeze(cell2mat(R_lowerCI_Cells))];
+
+    h_corrfig = figure(7);
+
+    upper_size = R_upperCI_matrix - R_matrix;
+    lower_size = R_matrix - R_lowerCI_matrix;
+    facecolor = cell(size(R_matrix));
+    facecolor(:,1) = {'r'};
+    facecolor(:,2) = {'g'};
+    facecolor(:,3) = {'b'};
+    facecolor(:,4) = {'y'};
+    facecolor(:,5) = {'m'};
     
-    h_corrbars = figure(7);
-    h_ax = bar3(Rmatrix);
-    zlim([0 1]);
-    set(gca,'YTickLabel',subjectlist);
-    set(gca,'XTickLabel',requested_members.('slice'));
-    set(gca,'FontSize',6);
+    h_ax = barError3d(R_matrix,upper_size,lower_size,facecolor);
+    zlim([-1 1]);
+    set(gca,'XTickLabel',subjectlist);
+    set(gca,'YTickLabel',requested_members.('slice'));
+    set(gca,'XTick',[1:size(R_matrix,1)]);
+    set(gca,'YTick',[1:size(R_matrix,2)]);
+    set(gca,'FontSize',12);
     zlabel('R');
-    title(['Correlations between ' parname_x ' vs. ' parname_y]);
-    
-    
+    htext = title(['Correlations between ' parname_x ' vs. ' parname_y]);
+    set(htext,'Interpreter','none');
+    filename = [parname_x '_vs_' parname_y '_corrcoeff_' run_name];
+    save([dest_path filename],'R_matrix','R_upperCI_matrix','R_lowerCI_matrix');
+    saveas(h_corrfig,[dest_path filename],'tif');
+    filelist{i} = [dest_path filename '.tif'];
+    clf(h_corrfig);
 end
+% set(gcf,'units','normalized','outerposition',[0 0 1 1])
+
+h_im=montage(filelist(1:6),'Size',[2 3]);
+montage_im = get(h_im,'CData');
+imwrite(montage_im,[dest_path 'montage1_' run_name '.tif']);
+
+h_im=montage(filelist(7:12),'Size',[2 3]);
+montage_im = get(h_im,'CData');
+imwrite(montage_im,[dest_path 'montage2_' run_name '.tif']);
+
+h_im=montage(filelist(13:18),'Size',[2 3]);
+montage_im = get(h_im,'CData');
+imwrite(montage_im,[dest_path 'montage3_' run_name '.tif']);
+
+h_im=montage(filelist(19:22),'Size',[2 3]);
+montage_im = get(h_im,'CData');
+imwrite(montage_im,[dest_path 'montage4_' run_name '.tif']);
