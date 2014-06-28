@@ -1,7 +1,7 @@
 % STEP 1:  define the data dimension that you want to denote as the hue,
 % shade and marker type.  In terms of scatterplot: 
 % view_categories = {<hue class>,<shade class>,<marker type class>}
-view_categories = {'slice','subject','segzone'}; 
+view_categories = {'slice','subject',''}; 
 
 % STEP 2:  define the specific colours, shades and marker types you want to
 % use for displaying of the different data dimensions (disp_attributes).
@@ -31,16 +31,16 @@ view_categories = {'slice','subject','segzone'};
     requested_members.('group') = {'8wk','Media','Cells'};
     requested_members.('segzone') = {'Dorsal','Ventral','Lateral'};
     requested_members.('subject') = {'41'};
-    % requested_members.('slice') = {'1EdgeCaudal'};
+    requested_members.('slice') = {'1EdgeCaudal'};
     % requested_members.('slice') = {'2MidCaudal'};
     % requested_members.('slice') = {'3Epicentre'};
     % requested_members.('slice') = {'4MidCranial'};
-    requested_members.('slice') = {'5EdgeCranial'};
+%     requested_members.('slice') = {'5EdgeCranial'};
 
     % % Option 2:  include the whole study
     % requested_members.('group') = {'Media','Cells','8wk'};
     % requested_members.('subject') = {'11','16','18','20','36','39','41','51','54','55','56','58','61','62'};
-    % requested_members.('slice') = {'1EdgeCaudal','2MidCaudal','3Epicentre','4MidCranial','5EdgeCranial'};
+%     requested_members.('slice') = {'1EdgeCaudal','2MidCaudal','3Epicentre','4MidCranial','5EdgeCranial'};
     % requested_members.('segzone') = {'Dorsal','Ventral','Lateral'};
 
 % STEP 4: define the parameter maps you want to compare
@@ -70,17 +70,17 @@ view_categories = {'slice','subject','segzone'};
     % parx_pairs = {{'FA','Axon_AreaFraction'}};
 
 SKP_GenerateInfostruct;
-sf = make_SKP_storageframe('MRIPixelGrid','Sectors',rootpath,'06-Transformation\02-ConsolidatedData\',IDtag);
+% sf = make_SKP_storageframe('MRIPixelGrid','Sectors',rootpath,'06-Transformation\02-ConsolidatedData\',IDtag);
 storage_layout = {'group','subject','slice','segzone'};
 origdir = pwd;
 cd(rootpath);
-save('SKP-sf.mat','sf');
+% save('SKP-sf.mat','sf');
 % load SKP_sf.mat
 cd(origdir);
 
 n_pairs = length(parx_pairs);
 
-for i=1:n_pairs
+for i=1:1
     parname_x = parx_pairs{i}{1};
     parname_y = parx_pairs{i}{2};
     vf_x = MakeViewframe(parname_x,view_categories,sf,storage_layout,requested_members);
@@ -92,8 +92,9 @@ for i=1:n_pairs
     h_upstream_y=figure(6);
    
     axisextents = [];
+    [R,R_upperCI,R_lowerCI,pval] = CalcCorrcoeffViewframe(vf_x,vf_y,'Pearson');
     h_series = CreateViewframeScatterplot(vf_x,vf_y,parname_x,parname_y,disp_attributes,view_categories,requested_members,h_scatter,h_thumbx,h_thumby,h_upstream_x,h_upstream_y,'points','',[],rootpath);
-    h_legend = CreateViewframeLegend(h_series,requested_members,view_categories,'separateFigure','EastOutside',8);
+    h_legend = CreateViewframeLegend(h_series,requested_members,view_categories,'separateFigure','EastOutside',8,R);
     figure(h_scatter);
     ti = get(gca,'TightInset');
     set(gca,'Position',[ti(1) ti(2) 1-ti(3)-ti(1) 1-ti(4)-ti(2)]);

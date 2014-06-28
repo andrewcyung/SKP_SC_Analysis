@@ -1,4 +1,4 @@
-function h=CreateViewframeLegend(h_series,requested_members,dimension_order,mode,location,fontsize,R)
+function h=CreateViewframeLegend(h_series,requested_members,dimension_order,mode,location,fontsize)
 
 [n_hue,n_shade,n_marker] = size(h_series);
 h_series_vec = [];
@@ -24,7 +24,7 @@ for i_hue=1:n_hue
                     txt3 = requested_members.(dimension_order{3}){i_marker};
                 end
 
-                txt_vec{counter} = [txt1 ' ' txt2 ' ' txt3 ' R=' num2str(R{i_hue,i_shade,i_marker})];
+                txt_vec{counter} = [txt1 txt2 txt3];
                 counter = counter + 1;
                 h_series_vec = [h_series_vec h_series(i_hue,i_shade,i_marker)];
             end

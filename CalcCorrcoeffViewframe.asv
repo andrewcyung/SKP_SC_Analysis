@@ -45,9 +45,7 @@ for i=1:vf_dim(1)
             end
             
 %             strip entries that have NaN in either data vector
-            NaN_indices = isnan(xcontents_all) | isnan(ycontents_all);
-            xcontents_all = xcontents_all(~NaN_indices);
-            ycontents_all = ycontents_all(~NaN_indices);
+            
             
             if strcmp(corrmode,'Pearson')
                 [r,p,r_lo,r_hi] = corrcoef(xcontents_all,ycontents_all);

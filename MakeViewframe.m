@@ -1,21 +1,21 @@
 function viewframe =  MakeViewframe(parxname,view_categories,storageframe,storage_layout,requested_members)
 % This function outputs a nested set of cell vectors (the viewframe, up to
-% 3 levels deep) for a particular parameter (the parxname). 
-% The viewframe serves as input to correlation scatterplots (compare 
+% 3 levels deep) for a particular parameter (the parxname).
+% The viewframe serves as input to correlation scatterplots (compare
 % viewframes from two parameters) or comparison of a parameter's value
 % across different dimensions of the experiment (eg. experimental group).
 %
 % The viewframe assumes that there will be up to three levels in the data
 % hierarchy, mainly to accommodate a correlation scatterplot where the
 % group dimensions will be encoded by the a) hue, b) shading, and c) marker
-% type.  The basic element of the viewframe is an array of parx structs 
+% type.  The basic element of the viewframe is an array of parx structs
 % which have the following fields:
 %   .id             the name of the parameter
 %   .data           the parameter values (usually within a ROI in an image)
 %   .coord          the position or coordinate of the corresponding members of .data
 %   .srcimpath      the filepath to the original source image
 %   .tfm_parx2srcim transform matrix which converts coordinates from the parameter map to the src image
-% 
+%
 % The .coord, .srcimpath and .tfm_parx2srcim fields allow us to
 % reference back to the source data from which the data point was derived
 % (e.g. coordinates for fractional anisotropy data point refers to position
@@ -27,7 +27,7 @@ function viewframe =  MakeViewframe(parxname,view_categories,storageframe,storag
 % a 1D vector of "marker" vectors.  If the datasets that correspond to that
 % hue-shade-marker combination is missing, the parx vector will be an
 % empty set.
-% 
+%
 % Once the viewframe is constructed, the graphing function can display all
 % the data or a selected subset.  The idea is to generate a viewframe once
 % for a typical data exploration task which results in a more "focused" dataset,
@@ -49,7 +49,7 @@ function viewframe =  MakeViewframe(parxname,view_categories,storageframe,storag
 %
 % To accomodate situations where we want some data to be intentionally
 % omitted (e.g. in mid-study, the data for all subjects has not yet been
-%  acquired, "requested_members" is a structure array with field names 
+%  acquired, "requested_members" is a structure array with field names
 % given by storage_layout, which lists the elements that we want to
 % include in the view_frame.
 
@@ -69,10 +69,12 @@ function viewframe =  MakeViewframe(parxname,view_categories,storageframe,storag
 % STEP 1: check that requested view categories are part of the storage layout
 n_viewcat = length(view_categories);
 for i_cat=1:n_viewcat
-   if ~ismember(view_categories{i_cat},storage_layout)
-       disp(['view category ' view_categories{i_cat} ' not found in storage frame.']);
-       return;
-   end
+    if ~strcmp(view_categories{i_cat},'')
+        if ~ismember(view_categories{i_cat},storage_layout)
+            disp(['view category ' view_categories{i_cat} ' not found in storage frame.']);
+            return;
+        end
+    end
 end
 
 % STEP 2:  construct viewframe iteratively
@@ -80,61 +82,82 @@ end
 % viewframe) determine the specific group, subject, slice and segzone to
 % extract out of the storageframe and store in the current element of the
 % viewframe.  The variables that contain these choices are groupid,
-% subjectid, sliceid, and segid.  If the storageframe dimension was not 
+% subjectid, sliceid, and segid.  If the storageframe dimension was not
 % named as a view category, this means that the data in this dimension
 % should be collapsed and treated as one dataset (the corresponding id
 % variable will be marked as 'collapsed').
 
-if length(view_categories)==3
-    n_hue = length(requested_members.(view_categories{1}));
-    n_shade = length(requested_members.(view_categories{2}));
-    n_marker = length(requested_members.(view_categories{3}));
-elseif length(view_categories)==2
-    n_hue = 1;
-    n_shade = length(requested_members.(view_categories{1}));
-    n_marker = length(requested_members.(view_categories{2}));
-elseif length(view_categories)==1
-    n_hue = 1;
-    n_shade = 1;
-    n_marker = length(requested_members.(view_categories{1}));
+if length(view_categories) ~= 3
+    disp('number of view categories must be 3');
+    return;
 end
+
+isHueDefined = true;
+isShadeDefined = true;
+isMarkerDefined = true;
+
+if strcmp(view_categories{1},'')
+    n_hue = 1;
+    isHueDefined = false;
+else
+    n_hue = length(requested_members.(view_categories{1}));
+end
+
+if strcmp(view_categories{2},'')
+    n_shade = 1;
+    isShadeDefined = false;
+else
+    n_shade = length(requested_members.(view_categories{2}));
+end
+
+if strcmp(view_categories{3},'')
+    n_marker = 1;
+    isMarkerDefined = false;
+else
+    n_marker = length(requested_members.(view_categories{3}));
+end
+
 viewframe = cell(n_hue,n_shade,n_marker);
 
 for i_hue=1:n_hue
-    switch view_categories{1}
-        case 'group'
-            groupid = requested_members.('group'){i_hue};
-        case 'subject'
-            subjectid = requested_members.('subject'){i_hue};
-        case 'slice'
-            sliceid = requested_members.('slice'){i_hue};
-        case 'segzone'
-            segid = requested_members.('segzone'){i_hue};
-    end
-    
-    for i_shade=1:n_shade
-        switch view_categories{2}
+    if isHueDefined
+        switch view_categories{1}
             case 'group'
-                groupid = requested_members.('group'){i_shade};
+                groupid = requested_members.('group'){i_hue};
             case 'subject'
-                subjectid = requested_members.('subject'){i_shade};
+                subjectid = requested_members.('subject'){i_hue};
             case 'slice'
-                sliceid = requested_members.('slice'){i_shade};
+                sliceid = requested_members.('slice'){i_hue};
             case 'segzone'
-                segid = requested_members.('segzone'){i_shade};
+                segid = requested_members.('segzone'){i_hue};
+        end
+    end
+    for i_shade=1:n_shade
+        if isShadeDefined
+            switch view_categories{2}
+                case 'group'
+                    groupid = requested_members.('group'){i_shade};
+                case 'subject'
+                    subjectid = requested_members.('subject'){i_shade};
+                case 'slice'
+                    sliceid = requested_members.('slice'){i_shade};
+                case 'segzone'
+                    segid = requested_members.('segzone'){i_shade};
+            end
         end
         for i_marker=1:n_marker
-            switch view_categories{3}
-                case 'group'
-                    groupid = requested_members.('group'){i_marker};
-                case 'subject'
-                    subjectid = requested_members.('subject'){i_marker};
-                case 'slice'
-                    sliceid = requested_members.('slice'){i_marker};
-                case 'segzone'
-                    segid = requested_members.('segzone'){i_marker};
+            if isMarkerDefined
+                switch view_categories{3}
+                    case 'group'
+                        groupid = requested_members.('group'){i_marker};
+                    case 'subject'
+                        subjectid = requested_members.('subject'){i_marker};
+                    case 'slice'
+                        sliceid = requested_members.('slice'){i_marker};
+                    case 'segzone'
+                        segid = requested_members.('segzone'){i_marker};
+                end
             end
-            
             collapsed_dim = setdiff(storage_layout,view_categories);
             n_collapse = length(collapsed_dim);
             for i_collapse=1:n_collapse
@@ -171,6 +194,7 @@ for i_hue=1:n_hue
             n_group = length(storageframe);
             found_flag = zeros(1,n_group);
             
+            % construct group iterator
             if ~strcmp(groupid,'collapsed')
                 for i=1:n_group
                     found_flag(i) = strcmp_handleempty(storageframe{i},groupid);
@@ -187,9 +211,12 @@ for i_hue=1:n_hue
                 end
             end
             group_iterator = find(found_flag);
-
+            
+            % iterate through the selected groups, iterate through the
+            % subjects of each of the selected groups
             if ~isempty(group_iterator)
                 for i_group=group_iterator
+                    % for the current group, construct the subject iterator
                     subject_frame = storageframe{i_group}.subject;
                     n_subject = length(subject_frame);
                     found_flag = zeros(1,n_subject);
@@ -211,81 +238,93 @@ for i_hue=1:n_hue
                         end
                     end
                     subject_iterator = find(found_flag);
-  
-                end
-            end
-            
-            if ~isempty(subject_iterator)
-                for i_subject=subject_iterator
-                    slice_frame = subject_frame{i_subject}.slice;
-                    n_slice = length(slice_frame);
-                    found_flag = zeros(1,n_slice);
-                    
-                    if ~strcmp(sliceid,'collapsed')
-                        for i=1:n_slice
-                            found_flag(i) = strcmp_handleempty(slice_frame{i},sliceid);
-                        end
-                    else
-                        requested_slices = requested_members.('slice');
-                        for i=1:n_slice
-                            if isempty(slice_frame{i})
-                                found_flag(i) = false;
-                            elseif ismember(slice_frame{i}.id,requested_slices)
-                                found_flag(i) = true;
+
+                    % now that the selected subjects of the current group have been defined,
+                    % iterate through the slices of each of the selected subjects
+                    if ~isempty(subject_iterator)
+                        for i_subject=subject_iterator
+                            slice_frame = subject_frame{i_subject}.slice;
+                            n_slice = length(slice_frame);
+                            found_flag = zeros(1,n_slice);
+                            
+                            if ~strcmp(sliceid,'collapsed')
+                                for i=1:n_slice
+                                    found_flag(i) = strcmp_handleempty(slice_frame{i},sliceid);
+                                end
                             else
-                                found_flag(i) = false;
+                                requested_slices = requested_members.('slice');
+                                for i=1:n_slice
+                                    if isempty(slice_frame{i})
+                                        found_flag(i) = false;
+                                    elseif ismember(slice_frame{i}.id,requested_slices)
+                                        found_flag(i) = true;
+                                    else
+                                        found_flag(i) = false;
+                                    end
+                                end
+                            end
+                            slice_iterator = find(found_flag);
+
+                            % now that the requested slices of the current subject have been defined, iterate through
+                            % the segzones of each of the selected slices
+                            if ~isempty(slice_iterator)
+                                for i_slice=slice_iterator
+                                    seg_frame = slice_frame{i_slice}.segzone;
+                                    n_seg = length(seg_frame);
+                                    found_flag = zeros(1,n_seg);
+                                    
+                                    if ~strcmp(segid,'collapsed')
+                                        for i=1:n_seg
+                                            found_flag(i) = strcmp_handleempty(seg_frame{i},segid);
+                                        end
+                                    else
+                                        requested_segs = requested_members.('segzone');
+                                        for i=1:n_seg
+                                            if isempty(seg_frame{i})
+                                                found_flag(i) = false;
+                                            elseif ismember(seg_frame{i}.id,requested_segs)
+                                                found_flag(i) = true;
+                                            else
+                                                found_flag(i) = false;
+                                            end
+                                        end
+                                        
+                                        for i=1:n_seg
+                                            found_flag(i) = ~isempty(seg_frame{i});
+                                        end
+                                    end
+                                    seg_iterator = find(found_flag);
+
+                                    % now that the requested segzones of the current slice have been defined,
+                                    % iterate through the segzones of each of the selected slice:  look for the 
+                                    % parameter map named by the parxname argument.  Accumulate the individual
+                                    % parameter vectors into in accum_parvec
+                                    if ~isempty(seg_iterator)
+                                        for i_seg=seg_iterator
+                                            parx_frame = seg_frame{i_seg}.parx;
+                                            n_parx = length(parx_frame);
+                                            found_flag = zeros(n_parx,1);
+                                            for i=1:n_parx
+                                                found_flag(i) = strcmp_handleempty(parx_frame{i},parxname);
+                                            end
+                                            parvec = parx_frame(find(found_flag));
+                                            accum_parvec = [accum_parvec parvec];
+                                        end
+                                    end
+                                end
                             end
                         end
                     end
-                    slice_iterator = find(found_flag);
                 end
             end
-            
-            if ~isempty(slice_iterator)
-                for i_slice=slice_iterator
-                    seg_frame = slice_frame{i_slice}.segzone;
-                    n_seg = length(seg_frame);
-                    found_flag = zeros(1,n_seg);
-                    
-                    if ~strcmp(segid,'collapsed')
-                        for i=1:n_seg
-                            found_flag(i) = strcmp_handleempty(seg_frame{i},segid);
-                        end
-                    else
-                        requested_segs = requested_members.('segzone');
-                        for i=1:n_seg
-                            if isempty(seg_frame{i})
-                                found_flag(i) = false;
-                            elseif ismember(seg_frame{i}.id,requested_segs)
-                                found_flag(i) = true;
-                            else
-                                found_flag(i) = false;
-                            end
-                        end                        
-                        
-                        for i=1:n_seg
-                            found_flag(i) = ~isempty(seg_frame{i});
-                        end
-                    end
-                    seg_iterator = find(found_flag);
-                end
-            end
-            
-            if ~isempty(seg_iterator)
-                for i_seg=seg_iterator
-                    parx_frame = seg_frame{i_seg}.parx;
-                    n_parx = length(parx_frame);
-                    found_flag = zeros(n_parx,1);
-                    for i=1:n_parx
-                        found_flag(i) = strcmp_handleempty(parx_frame{i},parxname);
-                    end
-                    parvec = parx_frame(find(found_flag));
-                    accum_parvec = [accum_parvec parvec];
-                end
-            end
-%             disp([groupid ' ' subjectid ' ' sliceid ' ' segid]);
-%             At the very end of the for loop, the viewframe element ends
-%             up being an array of parx structs.
+            % By now, for the current hue,shade and marker, we have
+            % explored the entire data hierarchy and accumulated the
+            % parameter values that meet the specified search criteria.
+            % Return all the accumulated parameter vectors into the current
+            % entry of the viewframe.
+            %             disp([groupid ' ' subjectid ' ' sliceid ' ' segid]);
+            %             At the very end of the for loop, the viewframe element ends
+            %             up being an array of parx structs.
             viewframe{i_hue}{i_shade}{i_marker} = accum_parvec;
         end
     end
