@@ -33,8 +33,10 @@ for i=1:vf_dim(1)
                 ycontents = viewframe_y{i};
             end
             
-            xcontents = xcontents{1};
-            ycontents = ycontents{1};
+            if iscell(xcontents) && length(xcontents)==1
+                xcontents = xcontents{1};
+                ycontents = ycontents{1};
+            end
             
             n_vec = length(xcontents);
             xcontents_all = [];

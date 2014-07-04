@@ -11,7 +11,7 @@ load(['F:\SKP-SC analysis\' 'SKP_matchkey_ay_original']) %loads matchkey
 load(['F:\SKP-SC analysis\' 'SKP-histomap_id']) %loads histomap_id
 
 % for j=1:14
-for j=[8 12]
+for j=[7 9:11 13:14]
     id = IDtag{j}.id
 
     src_basepath{1} = [rootpath id '\' '03-Segmentation\02_Histology\02_Set 2 - MBP_Axons_10x\15-MBP thresholded Otsu\'];

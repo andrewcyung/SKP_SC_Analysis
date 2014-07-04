@@ -30,7 +30,7 @@ view_categories = {'slice','subject',''};
     % % Option 1:  focus on one slice of one subject
     requested_members.('group') = {'8wk','Media','Cells'};
     requested_members.('segzone') = {'Dorsal','Ventral','Lateral'};
-    requested_members.('subject') = {'55'};
+    requested_members.('subject') = {'11'};
     requested_members.('slice') = {'1EdgeCaudal'};
     % requested_members.('slice') = {'2MidCaudal'};
     % requested_members.('slice') = {'3Epicentre'};
@@ -75,27 +75,31 @@ storage_layout = {'group','subject','slice','segzone'};
 origdir = pwd;
 cd(rootpath);
 % save('SKP-sf.mat','sf');
-% load SKP_sf.mat
+if ~exist('sf','var')
+    load SKP-sf.mat
+end
 cd(origdir);
 
 n_pairs = length(parx_pairs);
 
-for i=1:1
-    parname_x = parx_pairs{i}{1};
-    parname_y = parx_pairs{i}{2};
-    vf_x = MakeViewframe(parname_x,view_categories,sf,storage_layout,requested_members);
-    vf_y = MakeViewframe(parname_y,view_categories,sf,storage_layout,requested_members);
-    h_scatter=figure(1);
-    h_thumbx=figure(2);
-    h_thumby=figure(3);
-    h_upstream_x=figure(5);
-    h_upstream_y=figure(6);
-   
-    axisextents = [];
-    [R,R_upperCI,R_lowerCI,pval] = CalcCorrcoeffViewframe(vf_x,vf_y,'Pearson');
-    h_series = CreateViewframeScatterplot(vf_x,vf_y,parname_x,parname_y,disp_attributes,view_categories,requested_members,h_scatter,h_thumbx,h_thumby,h_upstream_x,h_upstream_y,'points','',[],rootpath);
-    h_legend = CreateViewframeLegend(h_series,requested_members,view_categories,'separateFigure','EastOutside',8,R);
-    figure(h_scatter);
-    ti = get(gca,'TightInset');
-    set(gca,'Position',[ti(1) ti(2) 1-ti(3)-ti(1) 1-ti(4)-ti(2)]);
+h_scatter_list{1} = figure(1);
+h_scatter_list{2} = figure(2);
+h_scatterlegend_list{1} = 0;
+h_scatterlegend_list{2} = 0;
+scatter_parxname_list{1} = {'MWF','MBP_AreaFraction'};
+scatter_parxname_list{2} = {'MWF','EC_AreaFraction'};
+
+h_parMapView_list{1} = figure(5);
+h_parMapView_list{2} = figure(6);
+parMapView_name_list{1} = 'MWF';
+parMapView_name_list{2} = 'EC_AreaFraction';
+h_upstreamView_list{1} = figure(7);
+
+StartPointViewCoordinator(sf,storage_layout,view_categories,requested_members,disp_attributes,h_scatter_list,h_scatterlegend_list,scatter_parxname_list,h_parMapView_list,parMapView_name_list,h_upstreamView_list,rootpath)
+tilefigs([cell2mat(h_scatter_list) cell2mat(h_parMapView_list)]);
+n_legend = length(h_scatterlegend_list);
+for i=1:n_legend
+    if h_scatterlegend_list{i} ~= 0
+        figure(h_scatterlegend_list{i});
+    end
 end

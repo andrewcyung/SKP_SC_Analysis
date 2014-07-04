@@ -4,7 +4,8 @@ function highlight_imPosition(h_fig,h_rect,row,col)
     box_position = [col-pixelwidth/2,row-pixelheight/2,pixelwidth,pixelheight];
     figure(h_fig);
     if isnan(h_rect)
-        rectangle('Position',box_position,'EdgeColor','g');
+        h_rect=rectangle('Position',box_position,'EdgeColor','g','Tag','cursor');
+        
     else
         set(h_rect,'Position',box_position);
     end

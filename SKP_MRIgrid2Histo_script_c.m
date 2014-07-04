@@ -55,9 +55,9 @@ for j=[1:14]
     seg_basepath = [rootpath id '\' '03-Segmentation\02_Histology\'];
     
     
-%      for i=status{j}.isReg.AxonSum2MRI
+     for i=status{j}.isReg.AxonSum2MRI
 
-       for i=4
+%        for i=4
            
         disp(['MRI slice = ' slice_name{i}]);
         MRImask_path = [MRImask_basepath section_path{i}];

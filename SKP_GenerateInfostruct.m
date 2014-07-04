@@ -27,14 +27,14 @@ histo_stain{1}.runParMaps = 0;
 histo_stain{1}.runROIgridImport = 0;
 histo_stain{1}.interset_tfm_name = 'P0';
 
-histo_stain{2}.name = 'GFP_Set1';
+histo_stain{2}.name = 'GFPSet1';
 histo_stain{2}.setdir = '01_Set 1 - P0_GFAP_GFP_10x';
 histo_stain{2}.setindex = 1;
 histo_stain{2}.dirname = '02-GFP_green\';
 histo_stain{2}.segmapdir = '12-GFP thresholded';
 histo_stain{2}.main_ROI_staindir = '01-GFAP_blue\';
 histo_stain{2}.seg_ovnum = 1;
-histo_stain{2}.runParMaps = 0;
+histo_stain{2}.runParMaps = 1;
 histo_stain{2}.runROIgridImport = 0;
 histo_stain{2}.interset_tfm_name = 'P0';
 
@@ -45,7 +45,7 @@ histo_stain{3}.dirname = '03-P0_red\';
 histo_stain{3}.segmapdir = '11-P0 thresholded';
 histo_stain{3}.main_ROI_staindir = '01-GFAP_blue\';
 histo_stain{3}.seg_ovnum = 1;
-histo_stain{3}.runParMaps = 0;
+histo_stain{3}.runParMaps = 1;
 histo_stain{3}.runROIgridImport = 1;
 histo_stain{3}.interset_tfm_name = 'P0';
 
@@ -72,14 +72,14 @@ histo_stain{5}.runParMaps = 1;
 histo_stain{5}.runROIgridImport = 1;
 histo_stain{5}.interset_tfm_name = '';
 
-histo_stain{6}.name = 'GFP_Set2';
+histo_stain{6}.name = 'GFPSet2';
 histo_stain{6}.setdir = '02_Set 2 - MBP_Axons_10x';
 histo_stain{6}.setindex = 2;
 histo_stain{6}.dirname = '03-GFP_green\';
 histo_stain{6}.segmapdir = 'none';
 histo_stain{6}.main_ROI_staindir = '02-Axons_blue\';
 histo_stain{6}.seg_ovnum = 1;
-histo_stain{6}.runParMaps = 0;
+histo_stain{6}.runParMaps = 1;
 histo_stain{6}.runROIgridImport = 0;
 histo_stain{6}.interset_tfm_name = 0'';
 

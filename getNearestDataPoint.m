@@ -1,4 +1,4 @@
-function [xval,yval,chosen_lineseries,chosen_parvec,chosen_ptindex] = getNearestDataPoint(clicked_point,h_ax,h_lineseries)
+function [xval,yval,chosen_lineseries,chosen_parvec,chosen_ptindex,vf_index, pt_coord] = getNearestDataPoint(clicked_point,h_ax,h_lineseries)
 
 clicked_x = clicked_point(1,1);
 clicked_y = clicked_point(1,2);
@@ -24,6 +24,9 @@ for i=1:n_lineseries
         minDist = newDist;
     end
 end
+seriesinfo = get(h_lineseries(chosen_lineseries),'UserData');
+pt_coord = seriesinfo.coord(chosen_ptindex);
+vf_index = seriesinfo.vf_index;
 xval = lineseries_xdata{chosen_lineseries}(chosen_ptindex);
 yval = lineseries_ydata{chosen_lineseries}(chosen_ptindex);
 chosen_parvec = lineseries_vecindex{chosen_lineseries}(chosen_ptindex);

@@ -11,6 +11,8 @@ function viewframe =  MakeViewframe(parxname,view_categories,storageframe,storag
 % type.  The basic element of the viewframe is an array of parx structs
 % which have the following fields:
 %   .id             the name of the parameter
+%   .group          dictionary describing the parent categories (i.e.
+%                   subject, slice, segzone)
 %   .data           the parameter values (usually within a ROI in an image)
 %   .coord          the position or coordinate of the corresponding members of .data
 %   .srcimpath      the filepath to the original source image
