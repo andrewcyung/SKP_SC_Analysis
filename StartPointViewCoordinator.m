@@ -46,7 +46,7 @@ for i=1:n_scatterplots
     % ScatterplotClickCallback.m sets up a right-click to highlight a data
     % point on the scatterplot and a call to UpdateViews to make the other
     % views consistent with the chosen value.
-    set(gca,'ButtonDownFcn',{@ScatterplotClickCallback,h_scatter_list,h_parMapView_list})
+    set(gca,'ButtonDownFcn',{@ScatterplotClickCallback,h_scatter_list,h_parMapView_list,h_upstreamView_list,rootpath})
     % HACK:  set the HitTest property to off for the current lineseries, so
     % that clicking on the point will activate the ButtownDownFcn of the
     % axis (which is the object directly "beneath" the point)
@@ -125,14 +125,15 @@ for i=1:n_parmaps
         h_ParmapHighlightBox = NaN;
     end
     highlight_imPosition(gcf,h_ParmapHighlightBox,current_point{1}.row,current_point{1}.col);
-   upstreamData = info.upstreamData_x{selectedSeriesSubset};
-displayUpstreamData(upstreamData,clicked_point_y,clicked_point_x,h_fig_upstreamData_x,'',rootpath)
-upstreamData = info.upstreamData_y{selectedSeriesSubset};
-displayUpstreamData(upstreamData,clicked_point_y,clicked_point_x,h_fig_upstreamData_y,'',rootpath);
 
     h_im = findobj(gca,'Type','image');
-    set(h_im,'ButtonDownFcn',{@ParMapViewClickCallback,h_scatter_list,h_parMapView_list});
+    set(h_im,'ButtonDownFcn',{@ParMapViewClickCallback,h_scatter_list,h_parMapView_list,h_upstreamView_list,rootpath});
     
+    if ~isempty(h_upstreamView_list{i})
+        upstreamData = chosen_series{chosen_parvec}.upstreamDataStruct;
+        displayUpstreamData(upstreamData,current_point{1}.row,current_point{1}.col,h_upstreamView_list{i},'',rootpath)
+        set(h_parMapView_list{i},'UserData',upstreamData);
+    end
 end
 
 end

@@ -1,4 +1,4 @@
-function UpdatePointViews(h_scatter_list,h_parMap_list,h_upstreamView_list,clicked_parMap_point,clicked_scatterplot_point_index,clicked_scatterplot_lineseries,rootpath)
+function UpdatePointViews(h_scatter_list,h_parMap_list,h_upstreamView_list,clicked_parMap_point,clicked_scatterplot_point_index,clicked_scatterplot_lineseries)
 
 if isempty(clicked_parMap_point) && ~isempty(clicked_scatterplot_point_index)
     click_source = 'scatter';
@@ -69,7 +69,6 @@ for i=1:n_parMap
         series_info = get(h_lineseries1(clicked_scatterplot_lineseries),'UserData');
         row = series_info.coord{clicked_scatterplot_point_index}.row;
         col = series_info.coord{clicked_scatterplot_point_index}.col;
-      
         highlight_imPosition(gcf,h_ParmapHighlightBox,row,col);
 
     elseif strcmp(click_source,'parMap')
@@ -78,9 +77,9 @@ for i=1:n_parMap
         col = clicked_parMap_point(1);
         highlight_imPosition(gcf,h_ParmapHighlightBox,row,col);
     end
-    upstreamData = get(h_parMap_list{i},'UserData');
+    upstreamData = get(h_parMap_list{i},'UserData'))
     if ~isempty(upstreamData)
-        displayUpstreamData(upstreamData,row,col,h_upstreamView_list{i},'',rootpath)
+        displayUpstreamData(upstreamData,current_point{1}.row,current_point{1}.col,h_upstreamView_list{i},'',rootpath)
  
     end
 end

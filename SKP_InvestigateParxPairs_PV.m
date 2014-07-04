@@ -94,9 +94,10 @@ h_parMapView_list{2} = figure(6);
 parMapView_name_list{1} = 'MWF';
 parMapView_name_list{2} = 'EC_AreaFraction';
 h_upstreamView_list{1} = figure(7);
+h_upstreamView_list{2} = figure(8);
 
 StartPointViewCoordinator(sf,storage_layout,view_categories,requested_members,disp_attributes,h_scatter_list,h_scatterlegend_list,scatter_parxname_list,h_parMapView_list,parMapView_name_list,h_upstreamView_list,rootpath)
-tilefigs([cell2mat(h_scatter_list) cell2mat(h_parMapView_list)]);
+tilefigs([cell2mat(h_scatter_list) cell2mat(h_parMapView_list) cell2mat(h_upstreamView_list)]);
 n_legend = length(h_scatterlegend_list);
 for i=1:n_legend
     if h_scatterlegend_list{i} ~= 0
