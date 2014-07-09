@@ -99,7 +99,6 @@ for i=1:n_parmaps
     figure(hfig_parMap);
     parname = parMapView_name_list{i};
     vf = MakeViewframe(parname,view_categories,storageframe,storage_layout,requested_members);
-    
     if length(vf_index)==3
         chosen_series = vf{vf_index(1)}{vf_index(2)}{vf_index(3)};
     elseif length(vf_index)==2
@@ -127,13 +126,21 @@ for i=1:n_parmaps
     highlight_imPosition(gcf,h_ParmapHighlightBox,current_point{1}.row,current_point{1}.col);
 
     h_im = findobj(gca,'Type','image');
-    set(h_im,'ButtonDownFcn',{@ParMapViewClickCallback,h_scatter_list,h_parMapView_list,h_upstreamView_list,rootpath});
+    set(h_im,'ButtonDownFcn',{@ParMapViewClickCallback,h_scatter_list,h_parMapView_list,h_upstreamView_list,rootpath,vf_index});
     
+    
+    userdata.vf = vf;
+    userdata.vf_index = vf_index;
     if ~isempty(h_upstreamView_list{i})
         upstreamData = chosen_series{chosen_parvec}.upstreamDataStruct;
         displayUpstreamData(upstreamData,current_point{1}.row,current_point{1}.col,h_upstreamView_list{i},'',rootpath)
-        set(h_parMapView_list{i},'UserData',upstreamData);
+        userdata.upstreamData = upstreamData;
+    else
+        userdata.upstreamData = [];
     end
+    set(hfig_parMap,'UserData',userdata);
+    
+    
 end
 
 end

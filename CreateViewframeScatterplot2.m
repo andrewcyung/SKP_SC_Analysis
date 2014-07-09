@@ -172,6 +172,7 @@ for i_hue=1:n_hue
                 % query of the data points
                 info.coord = coordseries;
                 info.vf_index = [i_hue i_shade i_marker];
+
                 for i_vec=1:n_vec
                     info.parname_x = parname_x;
                     info.parname_y = parname_y;

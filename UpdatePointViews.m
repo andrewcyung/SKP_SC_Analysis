@@ -1,4 +1,4 @@
-function UpdatePointViews(h_scatter_list,h_parMap_list,h_upstreamView_list,clicked_parMap_point,clicked_scatterplot_point_index,clicked_scatterplot_lineseries,rootpath)
+function UpdatePointViews(h_scatter_list,h_parMap_list,h_upstreamView_list,clicked_parMap_point,clicked_scatterplot_point_index,clicked_scatterplot_lineseries,rootpath,vf_index)
 
 if isempty(clicked_parMap_point) && ~isempty(clicked_scatterplot_point_index)
     click_source = 'scatter';
@@ -69,7 +69,43 @@ for i=1:n_parMap
         series_info = get(h_lineseries1(clicked_scatterplot_lineseries),'UserData');
         row = series_info.coord{clicked_scatterplot_point_index}.row;
         col = series_info.coord{clicked_scatterplot_point_index}.col;
-      
+        lineseries1_vecindex = get(h_lineseries1(clicked_scatterplot_lineseries),'ZData');
+        chosen_parvec = lineseries1_vecindex(clicked_scatterplot_point_index);
+        
+        
+        userdata = get(h_parMap_list{i},'UserData');
+        vf = userdata.vf;
+%         vf_index = userdata.vf_index;
+        if length(vf_index)==3
+            chosen_series = vf{vf_index(1)}{vf_index(2)}{vf_index(3)};
+        elseif length(vf_index)==2
+            chosen_series = vf{vf_index(1)}{vf_index(2)};
+        elseif length(vf_index)==1
+            chosen_series = vf{vf_index(1)};
+        end
+
+        
+        h_im = findobj(gca,'Type','image');
+        buttondownfcn = get(h_im,'ButtonDownFcn');
+
+        
+        impath = [rootpath chosen_series{chosen_parvec}.thumbnail_path];
+
+        if exist(impath,'file')
+            im = imread(impath);
+            h_new_im = imagesc(im); colormap gray;
+            axis equal; axis off;
+            set(h_new_im,'ButtonDownFcn',buttondownfcn);
+        else
+            disp([impath ' does not exist']);
+        end
+
+        userdata.upstreamData = chosen_series{chosen_parvec}.upstreamDataStruct;
+        set(h_parMap_list{i},'UserData',userdata);
+        
+%         h_im = findobj(gca,'Type','image');
+%         set(h_im,'ButtonDownFcn',{@ParMapViewClickCallback,h_scatter_list,h_parMapView_list,h_upstreamView_list,rootpath});
+        h_ParmapHighlightBox = NaN; % highlight box erased
         highlight_imPosition(gcf,h_ParmapHighlightBox,row,col);
 
     elseif strcmp(click_source,'parMap')
@@ -78,7 +114,8 @@ for i=1:n_parMap
         col = clicked_parMap_point(1);
         highlight_imPosition(gcf,h_ParmapHighlightBox,row,col);
     end
-    upstreamData = get(h_parMap_list{i},'UserData');
+    userdata = get(h_parMap_list{i},'UserData');
+    upstreamData = userdata.upstreamData;
     if ~isempty(upstreamData)
         displayUpstreamData(upstreamData,row,col,h_upstreamView_list{i},'',rootpath)
  

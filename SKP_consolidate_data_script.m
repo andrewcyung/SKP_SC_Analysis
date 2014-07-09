@@ -1,4 +1,4 @@
-rootpath = 'F:\SKP-SC analysis\';
+% rootpath = 'F:\SKP-SC analysis\';
 
 section_path{1} = '01-edge_caudal\';
 section_path{2} = '02-mid_caudal\';

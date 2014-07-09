@@ -13,6 +13,9 @@ minDist = realmax;
 chosen_ptindex = NaN;
 chosen_lineseries = NaN;
 for i=1:n_lineseries
+    if h_lineseries(i) == 0
+        continue;
+    end
     lineseries_xdata{i} = get(h_lineseries(i),'XData');
     lineseries_ydata{i} = get(h_lineseries(i),'YData');
     lineseries_vecindex{i} = get(h_lineseries(i),'ZData');

@@ -79,9 +79,9 @@ histo_stain{6}.dirname = '03-GFP_green\';
 histo_stain{6}.segmapdir = 'none';
 histo_stain{6}.main_ROI_staindir = '02-Axons_blue\';
 histo_stain{6}.seg_ovnum = 1;
-histo_stain{6}.runParMaps = 1;
+histo_stain{6}.runParMaps = 0;
 histo_stain{6}.runROIgridImport = 0;
-histo_stain{6}.interset_tfm_name = 0'';
+histo_stain{6}.interset_tfm_name = '';
 
 histo_stain{7}.name = 'EC';
 histo_stain{7}.setdir = '03_Set 3 - Eriochrome_10x';
@@ -346,7 +346,7 @@ IDtag{5}.DTIexp = 7;
 IDtag{5}.DTIdir = 'cranial2cranial';
 IDtag{5}.ABCid = 'B';
 IDtag{5}.Nameid = 'George';
-IDtag{5}.Group = 'Cells';
+IDtag{5}.Group = 'Media';
 
 IDtag{6}.id='39';
 IDtag{6}.MWFexp_cran2caud = [19 17 15 16 18];
@@ -355,7 +355,7 @@ IDtag{6}.DTIexp = 14;
 IDtag{6}.DTIdir = 'caudal2cranial';
 IDtag{6}.ABCid = 'H';
 IDtag{6}.Nameid = 'Bob';
-IDtag{6}.Group = 'Media';
+IDtag{6}.Group = 'Cells';
 
 IDtag{7}.id='41';
 IDtag{7}.MWFexp_cran2caud = [18 10 8 17 19];
@@ -364,7 +364,7 @@ IDtag{7}.DTIexp = 7;
 IDtag{7}.DTIdir = 'cranial2caudal';
 IDtag{7}.ABCid = 'M';
 IDtag{7}.Nameid = 'Josh';
-IDtag{7}.Group = 'Media';
+IDtag{7}.Group = 'Cells';
 
 IDtag{8}.id='51';
 IDtag{8}.MWFexp_cran2caud = [14 12 11 13 15];
@@ -373,7 +373,7 @@ IDtag{8}.DTIexp = 10;
 IDtag{8}.DTIdir = 'cranial2cranial';
 IDtag{8}.ABCid = 'N';
 IDtag{8}.Nameid = 'Jacob';
-IDtag{8}.Group = 'Cells';
+IDtag{8}.Group = 'Media';
 
 IDtag{9}.id='54';
 IDtag{9}.MWFexp_cran2caud = [11 9 8 10 12];
@@ -382,7 +382,7 @@ IDtag{9}.DTIexp = 7;
 IDtag{9}.DTIdir = 'cranial2cranial';
 IDtag{9}.ABCid = 'J';
 IDtag{9}.Nameid = 'Darren';
-IDtag{9}.Group = 'Cells';
+IDtag{9}.Group = 'Media';
 
 IDtag{10}.id='55';
 IDtag{10}.MWFexp_cran2caud = [22 20 19 21 23];
@@ -391,7 +391,7 @@ IDtag{10}.DTIexp = 18;
 IDtag{10}.DTIdir = 'cranial2cranial';
 IDtag{10}.ABCid = 'G';
 IDtag{10}.Nameid = 'Andy';
-IDtag{10}.Group = 'Cells';
+IDtag{10}.Group = 'Media';
 
 IDtag{11}.id='56';
 IDtag{11}.MWFexp_cran2caud = [11 9 8 10 12];
@@ -400,7 +400,7 @@ IDtag{11}.DTIexp = 7;
 IDtag{11}.DTIdir = 'cranial2cranial';
 IDtag{11}.ABCid = 'E';
 IDtag{11}.Nameid = 'Patrick';
-IDtag{11}.Group = 'Cells';
+IDtag{11}.Group = 'Media';
 
 IDtag{12}.id='58';
 IDtag{12}.MWFexp_cran2caud = [12 10 8 9 11];
@@ -409,7 +409,7 @@ IDtag{12}.DTIexp = 7;
 IDtag{12}.DTIdir = 'caudal2cranial';
 IDtag{12}.ABCid = 'D';
 IDtag{12}.Nameid = 'Brent';
-IDtag{12}.Group = 'Media';
+IDtag{12}.Group = 'Cells';
 
 IDtag{13}.id='61';
 IDtag{13}.MWFexp_cran2caud = [11 9 8 10 11];
@@ -418,7 +418,7 @@ IDtag{13}.DTIexp = 7;
 IDtag{13}.DTIdir = 'cranial2cranial';
 IDtag{13}.ABCid = 'K';
 IDtag{13}.Nameid = 'Doug';
-IDtag{13}.Group = 'Media';
+IDtag{13}.Group = 'Cells';
 
 IDtag{14}.id='62';
 IDtag{14}.MWFexp_cran2caud = [12 10 8 11 13];
@@ -427,7 +427,7 @@ IDtag{14}.DTIexp = 9;
 IDtag{14}.DTIdir = 'cranial2cranial';
 IDtag{14}.ABCid = 'C';
 IDtag{14}.Nameid = 'Greg';
-IDtag{14}.Group = 'Media';
+IDtag{14}.Group = 'Cells';
 
 save SKP-IDtag IDtag
 
