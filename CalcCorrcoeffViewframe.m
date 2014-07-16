@@ -38,14 +38,18 @@ for i=1:vf_dim(1)
                 ycontents = ycontents{1};
             end
             
-            n_vec = length(xcontents);
             xcontents_all = [];
             ycontents_all = [];
-            for i_vec=1:n_vec
-                xcontents_all = [xcontents_all; xcontents{i_vec}.data];
-                ycontents_all = [ycontents_all; ycontents{i_vec}.data];
+            if isstruct(xcontents)
+                xcontents_all = [xcontents_all; xcontents.data];
+                ycontents_all = [ycontents_all; ycontents.data];
+            else
+                n_vec = length(xcontents);
+                for i_vec=1:n_vec
+                    xcontents_all = [xcontents_all; xcontents{i_vec}.data];
+                    ycontents_all = [ycontents_all; ycontents{i_vec}.data];
+                end
             end
-            
 %             strip entries that have NaN in either data vector
             NaN_indices = isnan(xcontents_all) | isnan(ycontents_all);
             xcontents_all = xcontents_all(~NaN_indices);

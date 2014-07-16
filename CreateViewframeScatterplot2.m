@@ -73,10 +73,10 @@ for i_hue=1:n_hue
             % In other words,if a viewframe entry is empty then make the
             % corresponding entry in the other viewframe empty as well, and
             % set the current LineSeries handle to zero
-            if isempty(xcontents) || isempty(ycontents)
-                if ~isempty(xcontents)
+            if isempty(xcontents) || isempty(ycontents) 
+                if ~isempty(xcontents) 
                     xcontents = [];
-                elseif ~isempty(ycontents)
+                elseif ~isempty(ycontents) 
                     ycontents = [];
                 end
                 h_plotseries(i_hue,i_shade,i_marker) = 0;
@@ -135,6 +135,12 @@ for i_hue=1:n_hue
                 startindex = endindex+1;
             end
             
+            if isempty(nonzeros(~isnan(dataseries_x))) || isempty(nonzeros(~isnan(dataseries_y)))
+                h_plotseries(i_hue,i_shade,i_marker) = 0;
+                continue
+            end
+                
+                
             % Set the axis and marker colour and type (according to the
             % disp_attributes
             if ~isempty(axisextents)

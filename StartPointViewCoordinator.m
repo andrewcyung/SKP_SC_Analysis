@@ -30,6 +30,7 @@ function StartPointViewCoordinator(storageframe, storage_layout, view_categories
 % Create the scatterplots
 n_scatterplots = length(h_scatter_list);
 h_series = cell(1,n_scatterplots);
+first_full_viewframe_found = false;
 for i=1:n_scatterplots
     axisextents = [];
     plotmode = 'auto';
@@ -40,6 +41,15 @@ for i=1:n_scatterplots
     vf_y = MakeViewframe(parname_y,view_categories,storageframe,storage_layout,requested_members);
     
     h_series{i} = CreateViewframeScatterplot2(vf_x,vf_y,parname_x,parname_y,disp_attributes,view_categories,requested_members,h_scatter_list{i},aggregation,plotmode,axisextents,rootpath)
+    if h_series{i} == 0
+       continue; 
+    else
+        if ~first_full_viewframe_found
+            first_full_viewframe_found = true;
+            first_full_viewframe_index = i;
+        end
+    end
+    
     ti = get(gca,'TightInset');
     set(gca,'Tag','scatterplot');
     set(gca,'Position',[ti(1) ti(2) 1-ti(3)-ti(1) 1-ti(4)-ti(2)]);
@@ -55,12 +65,13 @@ for i=1:n_scatterplots
     for i_child=1:n_axis_children
         set(h_children(i_child),'HitTest','off');
     end    
+
     
     % test for existence of highlight box on first scatterplot.  If none,
     % we assume that all scatterplot highlight cursors need to be
     % initialized.  Initial highlight point is at the (par_x,par_y) value
     % in the middle of the first scatterplot.
-    if i==1
+    if i==first_full_viewframe_index
         h_ScatterplotHighlightBox = findobj(gca,'Type','rectangle','Tag','cursor');
         if isempty(h_ScatterplotHighlightBox)
             initializationNeeded = true;
@@ -70,7 +81,6 @@ for i=1:n_scatterplots
             clicked_point = get(gca,'CurrentPoint');
         end
         [chosen_x,chosen_y,chosen_lineseries,chosen_parvec,chosen_ptindex,vf_index, current_point] = getNearestDataPoint(clicked_point,gca,h_series{i});
-
     end
     
     if initializationNeeded
@@ -87,17 +97,28 @@ for i=1:n_scatterplots
     % create related legend window with correlation coefficient information     
     [R,R_upperCI,R_lowerCI,pval] = CalcCorrcoeffViewframe(vf_x,vf_y,'Pearson');
     fontsize = 8;
-    CreateViewframeLegend(h_series{i},h_scatterlegend_list{i},requested_members,view_categories,'','SouthEast',fontsize,R);
+    if isempty(h_scatterlegend_list)
+        h_scatterlegend = NaN;
+    else
+        h_scatterlegend = h_scatterlegend_list{i};
+    end
+    CreateViewframeLegend(h_series{i},h_scatterlegend,requested_members,view_categories,'','SouthEast',fontsize,R);
 end
 
 % display the chosen parameter maps.  The work boils down to constructing
 % the right pathname for the thumbnail image that was created to display
 % the parameter map.  
+
+
+
 n_parmaps = length(h_parMapView_list);
 for i=1:n_parmaps
     hfig_parMap = h_parMapView_list{i};
     figure(hfig_parMap);
     parname = parMapView_name_list{i};
+    if ~first_full_viewframe_found
+        continue
+    end
     vf = MakeViewframe(parname,view_categories,storageframe,storage_layout,requested_members);
     if length(vf_index)==3
         chosen_series = vf{vf_index(1)}{vf_index(2)}{vf_index(3)};
@@ -108,6 +129,7 @@ for i=1:n_parmaps
     end
     
     impath = [rootpath chosen_series{chosen_parvec}.thumbnail_path];
+    
     
     if exist(impath,'file')
         im = imread(impath);
@@ -131,16 +153,17 @@ for i=1:n_parmaps
     
     userdata.vf = vf;
     userdata.vf_index = vf_index;
-    if ~isempty(h_upstreamView_list{i})
-        upstreamData = chosen_series{chosen_parvec}.upstreamDataStruct;
-        displayUpstreamData(upstreamData,current_point{1}.row,current_point{1}.col,h_upstreamView_list{i},'',rootpath)
-        userdata.upstreamData = upstreamData;
-    else
-        userdata.upstreamData = [];
+    if ~isempty(h_upstreamView_list)
+        if ~isempty(h_upstreamView_list{i})
+            upstreamData = chosen_series{chosen_parvec}.upstreamDataStruct;
+            displayUpstreamData(upstreamData,current_point{1}.row,current_point{1}.col,h_upstreamView_list{i},'',rootpath)
+            userdata.upstreamData = upstreamData;
+        else
+            userdata.upstreamData = [];
+        end
+%         set(hfig_parMap,'UserData',userdata);
     end
     set(hfig_parMap,'UserData',userdata);
-    
-    
 end
 
 end

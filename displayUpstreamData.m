@@ -36,18 +36,16 @@ upstreamDataFilename = [rootpath upstreamDataset.dirpath upstreamDataset.srcfile
 if exist(upstreamDataFilename,'file')
     if strcmp(upstreamDataset.filetype,'.mat')
         if isKey(upstreamDataset.options,'varname')
-            varname = upstreamDataset.options('varname');
-            try
-                loadedVar = load(upstreamDataFilename,varname);
-            end
-            dispQuantity = loadedVar.(varname);
+           dispQuantity = load(upstreamDataFilename); %may be more than one variable
         end
     elseif strcmp(upstreamDataset.filetype,'.png') || strcmp(upstreamDataset.filetype,'.tif')
         dispQuantity = imread(upstreamDataFilename);
     end
     dispFcn = [];
-    eval(['dispFcn = @' upstreamDataset.dispFcnName ';']);
-    dispFcn(h_fig_upstream,row,col,upstreamDataset.im2src_tfm,dispQuantity,upstreamDataset.options,rootpath);
+    if ~isempty(upstreamDataset.dispFcnName)
+        eval(['dispFcn = @' upstreamDataset.dispFcnName ';']);
+        dispFcn(h_fig_upstream,row,col,upstreamDataset.im2src_tfm,dispQuantity,upstreamDataset.options,rootpath);
+    end
 end
 
 end

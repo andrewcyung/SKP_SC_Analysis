@@ -19,7 +19,7 @@ sf = make_SKP_storageframe('MRIPixelGrid','Sectors','F:\SKP-SC analysis\','06-Tr
 storage_layout = {'group','subject','slice','segzone'};
 origdir = pwd;
 cd(rootpath);
-% save('SKP-sf.mat','sf');
+save('SKP-sf-original.mat','sf');
 % load SKP-sf.mat
 cd(origdir);
 

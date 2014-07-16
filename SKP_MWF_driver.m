@@ -21,7 +21,7 @@ load(['F:\SKP-SC analysis\' 'SKP-IDtag'])
 % save([dest_basepath 'CPMG_echo_images.mat'],'echo_images');
 load([dest_basepath 'CPMG_echo_images.mat']);
 
-for j=1:14
+for j=3:14
     id = IDtag{j}.id
     exp_cran2caud = IDtag{j}.MWFexp_cran2caud;
     studypath = IDtag{j}.studypath;
@@ -36,7 +36,7 @@ for j=1:14
     load([ROIpath 'MWFgen_ROI_' id],'ROI');
     
     TE=6.738/1000;
-    isCVNNLS = 0; fixed_misfit = 1.0001;
+    isCVNNLS = 1; fixed_misfit = 1.0001;
     isSEcorr = 0;
 %     integlim = [7.5 22 200];
     integlim = [7.5 22 800];
@@ -55,9 +55,18 @@ for j=1:14
 %         imT2dist_CVstim = squeeze(MWFset{i_slice}.T2distmap); save([dest{i_slice} 'CPMG_T2dist_CVstim'], 'imT2dist_CVstim');
 %         imEcho_CVstim = squeeze(echo_images(j,i_slice)); save([dest{i_slice} 'CPMG_echo_CVstim'], 'imEcho_CVstim');
 
-        imMWF_fixedmisfit = squeeze(MWFset{i_slice}.MWFmap); save([dest{i_slice} 'CPMG_MWF_fixedmisfit'], 'imMWF_fixedmisfit');
-        imT2dist_fixedmisfit = squeeze(MWFset{i_slice}.T2distmap); save([dest{i_slice} 'CPMG_T2dist_fixedmisfit'], 'imT2dist_fixedmisfit');
-        imEcho_fixedmisfit = squeeze(echo_images(j,i_slice)); save([dest{i_slice} 'CPMG_echo_fixedmisfit'], 'imEcho_fixedmisfit');
+%         imMWF_fixedmisfit = squeeze(MWFset{i_slice}.MWFmap); save([dest{i_slice} 'CPMG_MWF_fixedmisfit'], 'imMWF_fixedmisfit');
+%         imT2dist_fixedmisfit = squeeze(MWFset{i_slice}.T2distmap); save([dest{i_slice} 'CPMG_T2dist_fixedmisfit'], 'imT2dist_fixedmisfit');
+%         imdecay_pred_fixedmisfit = squeeze(MWFset{i_slice}.decay_pred);
+%         imEcho_fixedmisfit = squeeze(echo_images(j,i_slice)); save([dest{i_slice} 'CPMG_echo_fixedmisfit'], 'imEcho_fixedmisfit','imdecay_pred_fixedmisfit');
+%         imGoF_fixedmisfit = squeeze(MWFset{i_slice}.GoFmap); save([dest{i_slice} 'CPMG_GoF_fixedmisfit'], 'imGoF_fixedmisfit');
+
+        imMWF_CVvarlim = squeeze(MWFset{i_slice}.MWFmap); save([dest{i_slice} 'CPMG_MWF_CVvarlim'], 'imMWF_CVvarlim');
+        imT2dist_CVvarlim = squeeze(MWFset{i_slice}.T2distmap); save([dest{i_slice} 'CPMG_T2dist_CVvarlim'], 'imT2dist_CVvarlim');
+        imdecay_pred_CVvarlim = squeeze(MWFset{i_slice}.decay_pred);
+        imEcho_CVvarlim = squeeze(echo_images(j,i_slice)); save([dest{i_slice} 'CPMG_echo_CVvarlim'], 'imEcho_CVvarlim','imdecay_pred_CVvarlim');
+        imGoF_CVvarlim = squeeze(MWFset{i_slice}.GoFmap); save([dest{i_slice} 'CPMG_GoF_CVvarlim'], 'imGoF_CVvarlim');
+        imIntegLim_CVvarlim = squeeze(MWFset{i_slice}.integlim_map); save([dest{i_slice} 'CPMG_IntegLim_CVvarlim'], 'imIntegLim_CVvarlim');
         
 %         h1 = figure(1); axis image; imagesc(imMWF); title('MWF'); colorbar; caxis(MWFset{i_slice}.MWFmapClim); colormap('jet'); saveas(h1, [dest{i_slice} 'CPMG_MWF'],'png');
 %         h2 = figure(2); axis image; imagesc(imAlpha); title('flip angle'); colorbar; caxis(MWFset{i_slice}.alphamapClim); colormap('jet'); saveas(h2, [dest{i_slice} 'CPMG_flipangle'],'png');
@@ -68,60 +77,3 @@ for j=1:14
         
     end
 end
-% id='11';
-% exp_cran2caud =[11 9 7 8 10];
-% studypath = 'PK048wk11.551';
-
-
-% id='16';
-% exp_cran2caud = [10 8 7 9 11];
-% studypath = 'PK048wk16.511';
-
-% id='18';
-% exp_cran2caud = [13 11 10 12 14];
-% studypath = 'PK048wk18.531';
-
-% id='20';
-% exp_cran2caud = [12 10 9 15 16];
-% studypath = 'PK048wk20.521';
-
-% id='36';
-% exp_cran2caud = [11 9 8 10 12];
-% studypath = 'PK04_36.3K1';
-%
-% id='39';
-% exp_cran2caud = [19 17 15 16 18];
-% studypath = 'PK04_39.3F1';
-
-% id='41';
-% exp_cran2caud = [18 10 8 17 19];
-% studypath = 'PK04_41.3F1';
-
-% id='51';
-% exp_cran2caud = [14 12 11 13 15];
-% studypath = 'PK04_51.3K1';
-%
-% id='54';
-% exp_cran2caud = [11 9 8 10 12];
-% studypath = 'PK04_54.3G1';
-
-% id='55';
-% exp_cran2caud = [22 20 19 21 23];
-% studypath = 'PK04_55.3G1';
-
-% id='56';
-% exp_cran2caud = [11 9 8 10 12];
-% studypath = 'PK04_56.3H1';
-%
-% id='58';
-% exp_cran2caud = [12 10 8 9 11];
-% studypath = 'PK04_58.3G1';
-
-% id='61';
-% exp_cran2caud = [11 9 8 10 11];
-% studypath = 'PK04_61.3H1';
-
-% id='62';
-% exp_cran2caud = [12 10 8 11 13];
-% studypath = 'PK04_62.3H1';
-%

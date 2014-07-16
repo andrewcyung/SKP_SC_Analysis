@@ -98,16 +98,15 @@ h_parMapView_list{3} = figure(7);
 h_parMapView_list{4} = figure(8);
 
 parMapView_name_list{1} = 'MWF';
-parMapView_name_list{2} = 'EC_AreaFraction';
-parMapView_name_list{3} = 'P0_IntegODThresh';
-parMapView_name_list{4} = 'GFPSet1_IntegODThresh';
+parMapView_name_list{2} = 'MBP_AreaFraction';
+parMapView_name_list{3} = 'MRI_incl_mask';
+parMapView_name_list{4} = 'MWF_CVvarlim';
 
+% h_upstreamView_list = [];
 h_upstreamView_list{1} = figure(9);
 h_upstreamView_list{2} = figure(10);
 h_upstreamView_list{3} = figure(11);
 h_upstreamView_list{4} = figure(12);
-
-
 
 StartPointViewCoordinator(sf,storage_layout,view_categories,requested_members,disp_attributes,h_scatter_list,h_scatterlegend_list,scatter_parxname_list,h_parMapView_list,parMapView_name_list,h_upstreamView_list,rootpath)
 tilefigs([cell2mat(h_scatter_list) cell2mat(h_parMapView_list) cell2mat(h_upstreamView_list)]);

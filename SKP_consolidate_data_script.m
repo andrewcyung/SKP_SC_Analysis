@@ -81,10 +81,10 @@ for i_subject=[1:14]
                 continue; % go to next iteration in for loop
             end
             
-            dataset_objname = {[histo_stain{i_stain}.name '_AvgOD'], [histo_stain{i_stain}.name '_AvgODThresh'], [histo_stain{i_stain}.name '_AreaFraction'] [histo_stain{i_stain}.name '_IntegODThresh']};
-            histo_varname = {'AvgOD_Whole','AvgOD_AboveThresh','AreaFraction','IntegOD_AboveThresh'};
-            histo_varname_CollatedDataset = {'AvgOD','AvgODThresh','AreaFraction','IntegODThresh'};
-            for i_map=1:4
+            dataset_objname = {[histo_stain{i_stain}.name '_AvgOD'], [histo_stain{i_stain}.name '_AvgODThresh'], [histo_stain{i_stain}.name '_AreaFraction'], [histo_stain{i_stain}.name '_IntegODThresh'], [histo_stain{i_stain}.name '_incl_mask']};
+            histo_varname = {'AvgOD_Whole','AvgOD_AboveThresh','AreaFraction','IntegOD_AboveThresh','InclMask'};
+            histo_varname_CollatedDataset = {'AvgOD','AvgODThresh','AreaFraction','IntegODThresh','incl_mask'};
+            for i_map=1:5
                 HistoSrc_path = [rootpath HistoSrc_basepath 'HistoParMap_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '.mat'];
                 load([HistoSrc_path]);
                 thumbnail_path = [HistoSrc_basepath 'HistoParMap_' id '_' slice_name{i_slice} '_' histo_stain{i_stain}.name '_' histo_varname{i_map} '.tif'];
