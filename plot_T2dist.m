@@ -1,6 +1,8 @@
 function plot_T2dist(h_targetfig,selectedRow,selectedCol,posnTfm,data,options,rootpath)
-integlim = [7.5 22 200];
-T2dist = data.imT2dist;
+integlim = [20];
+T2dist_varname = options('varname');
+eval(['T2dist = data.' T2dist_varname ';']);
+% T2dist = data.imT2dist;
 T2Times = options('T2Times');
 if isnan(posnTfm)
     currT2Dist = squeeze(T2dist(selectedRow,selectedCol,:));
@@ -8,10 +10,10 @@ if isnan(posnTfm)
     hold off
     semilogx(T2Times,currT2Dist);
     dis = currT2Dist;
-%     MWF = sum(dis(find(T2Times>=integlim(1) & T2Times<=integlim(2))))/sum(dis);
-%     disp(['MWF = ' num2str(MWF)]);
+%     MWF = sum(dis(find(T2Times<=integlim(1))))/sum(dis);
+%     disp(['MWF for ' T2dist_varname ' = ' num2str(MWF)]);
 %                     
-    xlim([0 300]);
+%     xlim([0 300]);
     hold on
     maxAmp = max(currT2Dist);
     for i=1:length(integlim)

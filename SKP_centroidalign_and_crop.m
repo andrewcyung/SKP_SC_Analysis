@@ -44,7 +44,8 @@ for j=1:14
         cd(src_path);
         
 %         for k=1:n_parmap
-          for k=13:16
+         for k=13:16
+            disp(MRImap_id{k}.varname)
             load([src_path '\' MRImap_id{k}.filename '.mat'])
             eval(['im = ' MRImap_id{k}.varname ';']);
 

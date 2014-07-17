@@ -44,8 +44,9 @@ for j=1:14
         
         cd(src_path);
         
-        for k=1:length(upstream_info)
-            
+%         for k=1:length(upstream_info)
+        for k=5:6
+          
             load([src_path '\' upstream_info{k}.filename '.mat'])
             eval(['im = ' upstream_info{k}.varname ';']);
             if iscell(im)
@@ -88,9 +89,9 @@ for j=1:14
                 imFlipped = permute(imFlipped,[2 1 3]);
             end
 
-            eval([MRImap_id{k}.varname '= imFlipped;']);
+            eval([upstream_info{k}.varname '= imFlipped;']);
 
-            save([dest_path '\' upstream_info{k}.filename '.mat'], upstream_info{k}.varname);
+            save([dest_path '\' upstream_info{k}.filename '.mat'], upstream_info{k}.varname, '-append');
 
 
         end

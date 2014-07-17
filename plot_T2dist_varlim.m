@@ -1,6 +1,6 @@
 function plot_T2dist_varlim(h_targetfig,selectedRow,selectedCol,posnTfm,data,options,rootpath)
 
-T2dist = data.imT2dist;
+T2dist = data.imT2dist_CVvarlim;
 integlim = data.imIntegLim_CVvarlim;
 T2Times = options('T2Times');
 if isnan(posnTfm)
@@ -13,7 +13,6 @@ if isnan(posnTfm)
 %     MWF = sum(dis(find(T2Times>=integlim(1) & T2Times<=integlim(2))))/sum(dis);
 %     disp(['MWF = ' num2str(MWF)]);
 %                     
-    xlim([0 300]);
     hold on
     maxAmp = max(currT2Dist);
     for i=1:length(curr_integlim)

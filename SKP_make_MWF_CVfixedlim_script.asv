@@ -16,6 +16,12 @@ n_MRI = length(MRImap_id);
 
 % for j=[1:3 5:7 9:14]
 
+T2cutoff = 20;
+TE=6.738/1000;
+n_echoes = 32;
+te_temp = (TE*1000):(TE*1000):(TE*1000*n_echoes);
+T2Times=te_temp(1)+exp(((0:100)+1)/101*log(1500)); % 7T way
+
 for j=1:14
 
     id = IDtag{j}.id
@@ -23,8 +29,16 @@ for j=1:14
     for i=1:5 %iterate MRI slice position
         src_path = [src_basepath section_path{i}];
         load([src_path 'CPMG_T2dist_CVvarlim']); %load imT2dist_CVvarlim
-        load([src_path 'CPMG_IntegLim_CVvarlim']); %load imIntegLim_CVvarlim
-        save([src_path 'CPMG_upstreamData_CVvarlim.mat'],'imT2dist_CVvarlim','imIntegLim_CVvarlim');
+        imsize = size(imT2dist_CVvarlim);
+        MWF_fixedlim = zeros(imsize(1:2));
+        for i_row = 1:imsize(1)
+            for i_col = 1:imsize(2)
+                currT2dist = squeeze(imT2dist_CVvarlim(i_row,i_col,:));
+                MWF_fixedlim(i_row,i_col) = sum(currT2dist(T2Times<T2cutoff))/sum(currT2dist);
+            end
+        end
+        save([src_path 'CPMG_T2dist_CVfixedlim.mat'],'imT2dist_CVvarlim','imIntegLim_CVvarlim');
+        save([src_path 'CPMG_T2dist_CVfixedlim.mat'],'imT2dist_CVvarlim','imIntegLim_CVvarlim');
     end
 end
 

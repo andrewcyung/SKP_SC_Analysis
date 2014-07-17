@@ -4,11 +4,11 @@ clear parMapView_name_list
 clear h_parMapView_list
 SKP_GenerateInfostruct;
 
-% sf = make_SKP_storageframe('MRIPixelGrid','Sectors',rootpath,'06-Transformation\02-ConsolidatedData\',IDtag);
+sf = make_SKP_storageframe('MRIPixelGrid','Sectors',rootpath,'06-Transformation\02-ConsolidatedData\',IDtag);
 storage_layout = {'group','subject','slice','segzone'};
 origdir = pwd;
 cd(rootpath);
-% save('SKP-sf.mat','sf');
+save('SKP-sf.mat','sf');
 if ~exist('sf','var')
     load SKP-sf-original.mat
 end

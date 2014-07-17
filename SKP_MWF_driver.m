@@ -21,7 +21,7 @@ load(['F:\SKP-SC analysis\' 'SKP-IDtag'])
 % save([dest_basepath 'CPMG_echo_images.mat'],'echo_images');
 load([dest_basepath 'CPMG_echo_images.mat']);
 
-for j=3:14
+for j=3
     id = IDtag{j}.id
     exp_cran2caud = IDtag{j}.MWFexp_cran2caud;
     studypath = IDtag{j}.studypath;
@@ -41,7 +41,7 @@ for j=3:14
 %     integlim = [7.5 22 200];
     integlim = [7.5 22 800];
     
-     for i_slice=1:5
+     for i_slice=1
         disp([id ' slice ' num2str(i_slice)]);
          MWFset{i_slice} = MWF_cmd(echo_images{j,i_slice}, ROI{i_slice}, isCVNNLS, isSEcorr, TE, integlim/1000, fixed_misfit);
         

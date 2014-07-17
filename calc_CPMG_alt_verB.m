@@ -6,7 +6,7 @@ n_distpoints = length(T2dist);
 T2dist = preprocess_hack(T2dist);
 T2dist = T2dist/max(T2dist);
 
-% figure(1);semilogx(T2times,T2dist);
+figure(19);semilogx(T2times,T2dist);
 
 
 inflection_found = false;
@@ -83,9 +83,9 @@ end
 T2_cutoff = T2times(cutoff_index);
 varMWF = sum(T2dist(T2times>=0 & T2times<=T2_cutoff))/sum(T2dist);
 
-% line([T2times(pkindex1) T2times(pkindex1)],[0,max(T2dist)],'Color','r');
-% line([T2times(pkindex2) T2times(pkindex2)],[0,max(T2dist)],'Color','r');
-% line([T2times(cutoff_index) T2times(cutoff_index)],[0,max(T2dist)],'Color','g');
+line([T2times(pkindex1) T2times(pkindex1)],[0,max(T2dist)],'Color','r');
+line([T2times(pkindex2) T2times(pkindex2)],[0,max(T2dist)],'Color','r');
+line([T2times(cutoff_index) T2times(cutoff_index)],[0,max(T2dist)],'Color','g');
 
 end
 

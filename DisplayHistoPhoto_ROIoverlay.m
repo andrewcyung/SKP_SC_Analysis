@@ -16,6 +16,11 @@ rgb_segmask(:,:,1) = curr_segmask;
 
 
 grid_index = intersect(find(ROIgrid_variable.ROIgrid_i==row),find(ROIgrid_variable.ROIgrid_j==col));
+if isempty(grid_index)
+    disp('point is outside ROI grid');
+    return;
+end
+
 ROI_mask = false(size(curr_ROIgrid));
 ROI_mask(find(curr_ROIgrid==grid_index)) = true;
 outline = bwboundaries(ROI_mask);

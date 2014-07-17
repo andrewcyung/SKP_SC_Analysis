@@ -4,13 +4,13 @@ clear parMapView_name_list
 clear h_parMapView_list
 SKP_GenerateInfostruct;
 
-% sf = make_SKP_storageframe('MRIPixelGrid','Sectors',rootpath,'06-Transformation\02-ConsolidatedData\',IDtag);
+sf = make_SKP_storageframe('MRIPixelGrid','Sectors',rootpath,'06-Transformation\02-ConsolidatedData\',IDtag);
 storage_layout = {'group','subject','slice','segzone'};
 origdir = pwd;
 cd(rootpath);
-% save('SKP-sf.mat','sf');
+save('SKP-sf-CVvarlim.mat','sf');
 if ~exist('sf','var')
-    load SKP-sf-original.mat
+%     load SKP-sf-original.mat
 end
 cd(origdir);
 
@@ -24,7 +24,7 @@ disp_attributes.marker = ['+','o','*','.','x','s','d','p','h','^','v','>','<','+
 slice_names = {'1EdgeCaudal','2MidCaudal','3Epicentre','4MidCranial','5EdgeCranial'}; n_slice = length(slice_names);
 subject_names = {'11','16','18','20','36','39','41','51','54','55','56','58','61','62'}; n_subject = length(subject_names);
 sector_names = {'Dorsal','Ventral','Lateral'};
-parx_pairs = {{'MWF','MBP_IntegODThresh'},{'MWF','MBP_AreaFraction'},{'MWF','EC_IntegODThresh'},{'MWF','EC_AreaFraction'},...
+parx_pairs = {{'MWF_CVvarlim','MBP_IntegODThresh'},{'_CVvarlim','MBP_AreaFraction'},{'MWF_CVvarlim','EC_IntegODThresh'},{'MWF','EC_AreaFraction'},...
     {'Dlong','Axon_IntegODThresh'},{'Dlong','Axon_AreaFraction'},...
     {'Dtrans','MBP_IntegODThresh'},{'Dtrans','MBP_AreaFraction'},{'Dtrans','EC_IntegODThresh'},{'Dtrans','EC_AreaFraction'}};
 n_pair = length(parx_pairs);
@@ -33,11 +33,11 @@ dest_path = [rootpath 'Group Results\'];
 
 
 
-for i_subject = 14
+for i_subject = 1:14
 
     disp(subject_names{i_subject})
-%     for i_pair = 1:n_pair
-    for i_pair = 4
+    for i_pair = 1:n_pair
+%     for i_pair = 4
         
         % one slice at a time
         requested_members.('subject') = {subject_names{i_subject}};
