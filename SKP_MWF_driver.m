@@ -21,7 +21,7 @@ load(['F:\SKP-SC analysis\' 'SKP-IDtag'])
 % save([dest_basepath 'CPMG_echo_images.mat'],'echo_images');
 load([dest_basepath 'CPMG_echo_images.mat']);
 
-for j=3
+for j=1:14
     id = IDtag{j}.id
     exp_cran2caud = IDtag{j}.MWFexp_cran2caud;
     studypath = IDtag{j}.studypath;
@@ -36,12 +36,14 @@ for j=3
     load([ROIpath 'MWFgen_ROI_' id],'ROI');
     
     TE=6.738/1000;
-    isCVNNLS = 1; fixed_misfit = 1.0001;
+    fixed_misfit = 1.0001;
+    isCVNNLS = 0; %fixed_misfit = 1.02;
+    integlimvar = true;
     isSEcorr = 0;
-%     integlim = [7.5 22 200];
-    integlim = [7.5 22 800];
+    integlim = 22;
+
     
-     for i_slice=1
+     for i_slice=1:5
         disp([id ' slice ' num2str(i_slice)]);
          MWFset{i_slice} = MWF_cmd(echo_images{j,i_slice}, ROI{i_slice}, isCVNNLS, isSEcorr, TE, integlim/1000, fixed_misfit);
         
@@ -55,20 +57,28 @@ for j=3
 %         imT2dist_CVstim = squeeze(MWFset{i_slice}.T2distmap); save([dest{i_slice} 'CPMG_T2dist_CVstim'], 'imT2dist_CVstim');
 %         imEcho_CVstim = squeeze(echo_images(j,i_slice)); save([dest{i_slice} 'CPMG_echo_CVstim'], 'imEcho_CVstim');
 
-%         imMWF_fixedmisfit = squeeze(MWFset{i_slice}.MWFmap); save([dest{i_slice} 'CPMG_MWF_fixedmisfit'], 'imMWF_fixedmisfit');
-%         imT2dist_fixedmisfit = squeeze(MWFset{i_slice}.T2distmap); save([dest{i_slice} 'CPMG_T2dist_fixedmisfit'], 'imT2dist_fixedmisfit');
+%         imMWF_fixedmisfit = squeeze(MWFset{i_slice}.MWFmap); save([dest{i_slice} 'CPMG_MWF_fixedmisfit005'], 'imMWF_fixedmisfit');
+%         imT2dist_fixedmisfit = squeeze(MWFset{i_slice}.T2distmap); save([dest{i_slice} 'CPMG_T2dist_fixedmisfit005'], 'imT2dist_fixedmisfit');
 %         imdecay_pred_fixedmisfit = squeeze(MWFset{i_slice}.decay_pred);
-%         imEcho_fixedmisfit = squeeze(echo_images(j,i_slice)); save([dest{i_slice} 'CPMG_echo_fixedmisfit'], 'imEcho_fixedmisfit','imdecay_pred_fixedmisfit');
-%         imGoF_fixedmisfit = squeeze(MWFset{i_slice}.GoFmap); save([dest{i_slice} 'CPMG_GoF_fixedmisfit'], 'imGoF_fixedmisfit');
+%         imEcho_fixedmisfit = squeeze(echo_images(j,i_slice)); save([dest{i_slice} 'CPMG_echo_fixedmisfit005'], 'imEcho_fixedmisfit','imdecay_pred_fixedmisfit');
+%         imGoF_fixedmisfit = squeeze(MWFset{i_slice}.GoFmap); save([dest{i_slice} 'CPMG_GoF_fixedmisfit005'], 'imGoF_fixedmisfit');
 
-        imMWF_CVvarlim = squeeze(MWFset{i_slice}.MWFmap); save([dest{i_slice} 'CPMG_MWF_CVvarlim'], 'imMWF_CVvarlim');
-        imT2dist_CVvarlim = squeeze(MWFset{i_slice}.T2distmap); save([dest{i_slice} 'CPMG_T2dist_CVvarlim'], 'imT2dist_CVvarlim');
-        imdecay_pred_CVvarlim = squeeze(MWFset{i_slice}.decay_pred);
-        imEcho_CVvarlim = squeeze(echo_images(j,i_slice)); save([dest{i_slice} 'CPMG_echo_CVvarlim'], 'imEcho_CVvarlim','imdecay_pred_CVvarlim');
-        imGoF_CVvarlim = squeeze(MWFset{i_slice}.GoFmap); save([dest{i_slice} 'CPMG_GoF_CVvarlim'], 'imGoF_CVvarlim');
-        imIntegLim_CVvarlim = squeeze(MWFset{i_slice}.integlim_map); save([dest{i_slice} 'CPMG_IntegLim_CVvarlim'], 'imIntegLim_CVvarlim');
+        imMWF_fixedmisfit_varlim = squeeze(MWFset{i_slice}.MWFmap); save([dest{i_slice} 'CPMG_MWF_fixedmisfit_varlim'], 'imMWF_fixedmisfit_varlim');
+        imT2dist_fixedmisfit_varlim = squeeze(MWFset{i_slice}.T2distmap); save([dest{i_slice} 'CPMG_T2dist_fixedmisfit_varlim'], 'imT2dist_fixedmisfit_varlim');
+        imdecay_pred_fixedmisfit_varlim = squeeze(MWFset{i_slice}.decay_pred);
+        imEcho_fixedmisfit_varlim = squeeze(echo_images(j,i_slice)); save([dest{i_slice} 'CPMG_echo_fixedmisfit_varlim'], 'imEcho_fixedmisfit_varlim','imdecay_pred_fixedmisfit_varlim');
+        imGoF_fixedmisfit_varlim = squeeze(MWFset{i_slice}.GoFmap); save([dest{i_slice} 'CPMG_GoF_fixedmisfit_varlim'], 'imGoF_fixedmisfit_varlim');
+        imIntegLim_fixedmisfit_varlim = squeeze(MWFset{i_slice}.integlim_map); save([dest{i_slice} 'CPMG_IntegLim_fixedmisfit_varlim'], 'imIntegLim_fixedmisfit_varlim');
+
         
-%         h1 = figure(1); axis image; imagesc(imMWF); title('MWF'); colorbar; caxis(MWFset{i_slice}.MWFmapClim); colormap('jet'); saveas(h1, [dest{i_slice} 'CPMG_MWF'],'png');
+%         imMWF_CVvarlim = squeeze(MWFset{i_slice}.MWFmap); save([dest{i_slice} 'CPMG_MWF_CVvarlim'], 'imMWF_CVvarlim');
+%         imT2dist_CVvarlim = squeeze(MWFset{i_slice}.T2distmap); save([dest{i_slice} 'CPMG_T2dist_CVvarlim'], 'imT2dist_CVvarlim');
+%         imdecay_pred_CVvarlim = squeeze(MWFset{i_slice}.decay_pred);
+%         imEcho_CVvarlim = squeeze(echo_images(j,i_slice)); save([dest{i_slice} 'CPMG_echo_CVvarlim'], 'imEcho_CVvarlim','imdecay_pred_CVvarlim');
+%         imGoF_CVvarlim = squeeze(MWFset{i_slice}.GoFmap); save([dest{i_slice} 'CPMG_GoF_CVvarlim'], 'imGoF_CVvarlim');
+%         imIntegLim_CVvarlim = squeeze(MWFset{i_slice}.integlim_map); save([dest{i_slice} 'CPMG_IntegLim_CVvarlim'], 'imIntegLim_CVvarlim');
+        
+        h1 = figure(100); axis image; imagesc(imMWF_fixedmisfit); title('MWF'); colorbar; caxis(MWFset{i_slice}.MWFmapClim); colormap('jet');
 %         h2 = figure(2); axis image; imagesc(imAlpha); title('flip angle'); colorbar; caxis(MWFset{i_slice}.alphamapClim); colormap('jet'); saveas(h2, [dest{i_slice} 'CPMG_flipangle'],'png');
 %         h3 = figure(3); axis image; imagesc(imDn); title('Proton density'); colorbar; caxis(MWFset{i_slice}.dnmapClim); colormap('jet'); saveas(h3, [dest{i_slice} 'CPMG_dn'],'png');
 %         h4 = figure(4); axis image; imagesc(imGmT2); title('gmT2'); colorbar; caxis(MWFset{i_slice}.gmT2mapClim); colormap('jet'); saveas(h4, [dest{i_slice} 'CPMG_gmT2'],'png');

@@ -58,6 +58,7 @@ for i_subject=[1:14]
         
         for i_map=1:n_MRImap
 %         for i_map=12
+            disp(MRImap_id{i_map}.filename);
             MRIsrc_path = [MRIsrc_basepath section_path{i_slice} MRImap_id{i_map}.filename '.mat'];
             load([rootpath MRIsrc_path]);
             thumbnail_path = [MRIsrc_basepath section_path{i_slice} MRImap_id{i_map}.varname '.png'];

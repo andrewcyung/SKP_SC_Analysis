@@ -20,11 +20,22 @@ for j=1:14
 
     id = IDtag{j}.id
     src_basepath = [rootpath id '\' '04-Preprocessing\07-MRI initial flip alignment\02-Results\'];
+    src_basepath = [rootpath id '\' '01-Original Images\01-MRI\'];
+    
     for i=1:5 %iterate MRI slice position
         src_path = [src_basepath section_path{i}];
-        load([src_path 'CPMG_T2dist_fixedmisfit_varlim']); %load imT2dist_CVvarlim
-        load([src_path 'CPMG_IntegLim_fixedmisfit_varlim']); %load imIntegLim_CVvarlim
-        save([src_path 'CPMG_T2dist_fixedmisfit_varlim.mat'],'imT2dist_fixedmisfit_varlim','imIntegLim_fixedmisfit_varlim');
+        load([src_path 'CPMG_T2dist_fixedmisfit005']);
+        load([src_path 'CPMG_MWF_fixedmisfit005']);
+        load([src_path 'CPMG_GoF_fixedmisfit005']);
+
+        imT2dist_fixedmisfit005 = imT2dist_fixedmisfit;
+        imMWF_fixedmisfit005 = imMWF_fixedmisfit;
+        imGoF_fixedmisfit005 = imGoF_fixedmisfit;
+        
+        save([src_path 'CPMG_T2dist_fixedmisfit005'],'imT2dist_fixedmisfit005');
+        save([src_path 'CPMG_MWF_fixedmisfit005'],'imMWF_fixedmisfit005');
+        save([src_path 'CPMG_GoF_fixedmisfit005'],'imGoF_fixedmisfit005');
+        
     end
 end
 

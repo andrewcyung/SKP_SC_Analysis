@@ -31,7 +31,7 @@ for j=1:14
             mkdir(dest_path);
         end
 %         for k=1:n_MRI
-        for k=13:16
+        for k=10
 
             
             load([src_path MRImap_id{k}.filename]);

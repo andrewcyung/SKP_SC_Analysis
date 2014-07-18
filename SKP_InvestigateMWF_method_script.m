@@ -30,10 +30,10 @@ view_categories = {'slice','subject',''};
     % % Option 1:  focus on one slice of one subject
     requested_members.('group') = {'8wk','Media','Cells'};
     requested_members.('segzone') = {'Dorsal','Ventral','Lateral'};
-    requested_members.('subject') = {'11'};
-    requested_members.('slice') = {'1EdgeCaudal'};
-    % requested_members.('slice') = {'2MidCaudal'};
-    % requested_members.('slice') = {'3Epicentre'};
+    requested_members.('subject') = {'39'};
+%     requested_members.('slice') = {'1EdgeCaudal'};
+    requested_members.('slice') = {'2MidCaudal'};
+%     requested_members.('slice') = {'3Epicentre'};
     % requested_members.('slice') = {'4MidCranial'};
 %     requested_members.('slice') = {'5EdgeCranial'};
 
@@ -88,22 +88,25 @@ n_pairs = length(parx_pairs);
 h_scatter_list{1} = figure(1);
 h_scatter_list{2} = figure(2);
 h_scatter_list{3} = figure(3);
+h_scatter_list{4} = figure(4);
 h_scatterlegend_list{1} = 0;
 h_scatterlegend_list{2} = 0;
 h_scatterlegend_list{3} = 0;
+h_scatterlegend_list{4} = 0;
 scatter_parxname_list{1} = {'MWF','MBP_AreaFraction'};
 scatter_parxname_list{2} = {'MWF_fixedmisfit','MBP_AreaFraction'};
-scatter_parxname_list{3} = {'MWF_CVvarlim','MBP_AreaFraction'};
+scatter_parxname_list{3} = {'MWF_fixedmisfit_varlim','MBP_AreaFraction'};
+scatter_parxname_list{4} = {'MWF_CVvarlim','CPMG_GoF_CVvarlim'};
 
-h_parMapView_list{1} = figure(4);
-h_parMapView_list{2} = figure(5);
-h_parMapView_list{3} = figure(6);
-h_parMapView_list{4} = figure(7);
-h_parMapView_list{5} = figure(8);
+h_parMapView_list{1} = figure(5);
+h_parMapView_list{2} = figure(6);
+h_parMapView_list{3} = figure(7);
+h_parMapView_list{4} = figure(8);
+h_parMapView_list{5} = figure(13);
 
 parMapView_name_list{1} = 'MWF';
 parMapView_name_list{2} = 'MWF_fixedmisfit';
-parMapView_name_list{3} = 'MWF_CVvarlim';
+parMapView_name_list{3} = 'MWF_fixedmisfit_varlim';
 parMapView_name_list{4} = 'CPMG_GoF_CVvarlim';
 parMapView_name_list{5} = 'MBP_AreaFraction';
 
@@ -112,10 +115,10 @@ h_upstreamView_list{1} = figure(9);
 h_upstreamView_list{2} = figure(10);
 h_upstreamView_list{3} = figure(11);
 h_upstreamView_list{4} = figure(12);
-h_upstreamView_list{5} = figure(13);
+h_upstreamView_list{5} = figure(14);
 
 StartPointViewCoordinator(sf,storage_layout,view_categories,requested_members,disp_attributes,h_scatter_list,h_scatterlegend_list,scatter_parxname_list,h_parMapView_list,parMapView_name_list,h_upstreamView_list,rootpath)
-% tilefigs([cell2mat(h_scatter_list) cell2mat(h_parMapView_list) cell2mat(h_upstreamView_list)]);
+tilefigs([cell2mat(h_scatter_list) cell2mat(h_parMapView_list) cell2mat(h_upstreamView_list)]);
 n_legend = length(h_scatterlegend_list);
 for i=1:n_legend
     if h_scatterlegend_list{i} ~= 0

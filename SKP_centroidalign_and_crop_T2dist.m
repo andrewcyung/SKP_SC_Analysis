@@ -45,8 +45,8 @@ for j=1:14
         cd(src_path);
         
 %         for k=1:length(upstream_info)
-        for k=5:6
-          
+        for k=17
+            disp(upstream_info{k}.filename)
             load([src_path '\' upstream_info{k}.filename '.mat'])
             eval(['im = ' upstream_info{k}.varname ';']);
             if iscell(im)
@@ -79,21 +79,34 @@ for j=1:14
 %                 end
 %             end
 %             imFlipped = curr_MRImap;
+            imFlipped = imCropped;
             if orientation(1)
-                imFlipped = flipdim(imCropped,2);
+                imFlipped = flipdim(imFlipped,2);
             end
             if orientation(2)
                 imFlipped = flipdim(imFlipped,1);
             end
             if orientation(3)
-                imFlipped = permute(imFlipped,[2 1 3]);
+                if upstream_info{k}.n_dim == 2
+                    imFlipped = permute(imFlipped,[2 1]);
+                else
+                    imFlipped = permute(imFlipped,[2 1 3]);
+                end
             end
 
             eval([upstream_info{k}.varname '= imFlipped;']);
 
-            save([dest_path '\' upstream_info{k}.filename '.mat'], upstream_info{k}.varname, '-append');
+            filename = [dest_path '\' upstream_info{k}.filename '.mat'];
+            if exist(filename,'file')
+                save(filename, upstream_info{k}.varname, '-append');
+            else
+                save(filename, upstream_info{k}.varname);
+            end
 
-
+            if upstream_info{k}.n_dim == 2
+                dest_filename = [dest_path '\' upstream_info{k}.varname '.png'];
+                imwrite(mat2gray(imFlipped), dest_filename,'png');
+            end
         end
     end
 end
